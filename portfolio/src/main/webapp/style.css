@@ -7,3 +7,31 @@
 #fact-container {
   margin-top: 20px;
 }
+
+#gallery {
+  margin-left: auto;
+  margin-right: auto;
+  width: 1200px;
+}
+
+.row {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.column {
+  float: left;
+  width: 25%;
+}
+
+img.resize {
+    max-width: 80%;
+    max-height: 80%;
+}
