@@ -1,10 +1,5 @@
+/* Website welcome styling */
 #welcome-content {
-  margin-left: auto;
-  margin-right: auto;
-  width: 650px;
-}
-
-#blog-content {
   margin-left: auto;
   margin-right: auto;
   width: 650px;
@@ -13,6 +8,16 @@
 #fact-container {
   margin-top: 20px;
 }
+
+/* Blog styling */
+
+#blog-content {
+  margin-left: auto;
+  margin-right: auto;
+  width: 650px;
+}
+
+/* Gallery styling */
 
 #gallery {
   margin-left: auto;
@@ -27,7 +32,7 @@
 }
 
 .row:after {
-  content: "";
+  content: '';
   display: table;
   clear: both;
 }
