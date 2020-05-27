@@ -27,3 +27,52 @@ function addRandomFact() {
   const factContainer = document.getElementById('fact-container');
   factContainer.innerText = fact;
 }
+
+/**
+ * Shows the specified blog post to the user
+ */
+function showBlogPost(postNum) {
+  const buttonId = "expandTriangle" + postNum;
+  document.getElementById(buttonId).src = "/images/downtriangle.jpeg";
+  document.getElementById(buttonId).onclick = function() {
+    hideBlogPost(postNum);
+  };
+  const blogPostId = "blogPostArea" + postNum;
+  if (postNum===1) {
+    var pTag = document.createElement("p");
+    pTag.appendChild(document.createTextNode("I have a secret love for \
+      bucket balls. Not only am I randomly good at tossing balls in \
+      incrementally spaced buckets, but I've had lots of opportunity to \
+      do so. Some of my fondest memories are tossing softballs back \
+      into the ball bucket from many yards away at the end of practice, \
+      to the delight of my teammates."));
+    document.getElementById(blogPostId).appendChild(pTag);
+
+    var imgTag = document.createElement("img");
+    imgTag.src = "/images/bucketballs.png";
+    document.getElementById(blogPostId).appendChild(imgTag);
+  }
+  if (postNum===2) {
+    var pTag = document.createElement('p');
+    pTag.appendChild(document.createTextNode("My fingers are very \
+      double-jointed. I can bend them all downward at the first joint \
+      behind the nail, and my thumbs bend backwards in a hitchhiker's thumb \
+      position. This double-jointedness actually makes it a bit difficult \
+      to play the cello, as collapsing joints are a big no-no for your \
+      left hand."));
+    document.getElementById(blogPostId).appendChild(pTag);
+  }
+}
+
+/**
+ * Hides the specified blog post from the user
+ */
+function hideBlogPost(postNum) {
+  const buttonId = "expandTriangle" + postNum;
+  document.getElementById(buttonId).src = "/images/righttriangle.jpeg";
+  document.getElementById(buttonId).onclick = function() {
+    showBlogPost(postNum);
+  };  
+  const blogPostId = "blogPostArea" + postNum;
+  document.getElementById(blogPostId).innerHTML = "";
+}
