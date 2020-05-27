@@ -1,4 +1,10 @@
-#content {
+#welcome-content {
+  margin-left: auto;
+  margin-right: auto;
+  width: 650px;
+}
+
+#blog-content {
   margin-left: auto;
   margin-right: auto;
   width: 650px;
