@@ -6,15 +6,11 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
-    <style>
-      html {
-          scroll-behavior: smooth;
-      }
-    </style>
   </head>
   <body>
-    <div id="welcome-content" class="filledBox">
-      <h1 style="text-align: center;">Katie's Portfolio</h1>
+    <section id="welcome-content">
+      <div class="filledBox">
+      <h1>Katie's Portfolio</h1>
       <p>Click here to get a random fact about me:</p>
       <button onclick="addRandomFact()" class="button">Fact</button>
       <div id="fact-container"></div>
@@ -50,7 +46,7 @@
             my MD/PhD mentor. Remote work included
             analyzing neural data using Python/JupyterLab.</dd>
       </dl>
-      <b>My Links</b><br/><br/>
+      <div class="title">My Links</div>
       <a href="https://www.linkedin.com/in/katie-lund1/">
         <img src="/images/linkedin.png" alt="LinkedIn Logo" 
             class="logoButton"/>
@@ -59,11 +55,12 @@
         <img src="/images/github.png" alt="GitHub Logo" 
             class="logoButton"/>
       </a>
-    </div>
-    <br/>
+      </div>
+    </section>
 
-    <div id="gallery" class="borderBox">
-    <h2 style="text-align: center;">Katie's Gallery!</h2>
+    <section id="gallery">
+    <div class="borderBox">
+    <h2>Katie's Gallery!</h2>
     <div class="row">
       <div class="column">
         <img src="/images/cubs.JPG" alt="Cubs game" class="resize"/>
@@ -134,19 +131,22 @@
           hound mix Irma, as well as take pictures with my family
           and during family vacations.</p>
     </div>
-    <<div style="margin-bottom: 40px;"></div>
+    </section>
 
-    <div id="blog-content" class="borderBox">
-      <h2 style="text-align: center;">Blog Posts!</h2>
-      <b>Hidden Talent 1: Bucket Ball</b>
-      <img src="/images/righttriangle.jpeg" style="width: 20px; height: 20px;" 
-        id="expandTriangle1" alt="Expand/Hide" onclick="showBlogPost(1)" /><br/>
-      <div id="blogPostArea1"></div>
-      <b>Hidden Talent 2: Double Jointedness</b>
-      <img src="/images/righttriangle.jpeg" style="width: 20px; height: 20px;" 
-        id="expandTriangle2" alt="Expand/Hide" onclick="showBlogPost(2)" /><br/>
-      <div id="blogPostArea2" style="margin-bottom: 20px;"></div>
-    </div>
-    <div style="margin-bottom: 40px;"></div>
+    <section id="blog-content">
+      <div class="borderBox">
+      <h2>Blog Posts!</h2>
+      <article id="blogPostArea1" class="postArea">
+        <b>Hidden Talent 1: Bucket Ball</b>
+        <img src="/images/righttriangle.jpeg" class="resizeSmall" 
+            id="expandTriangle1" alt="Expand/Hide" onclick="showBlogPost(1)" />
+      </article>
+      <article id="blogPostArea2" class="postArea">
+        <b>Hidden Talent 2: Double Jointedness</b>
+        <img src="/images/righttriangle.jpeg" class="resizeSmall"
+            id="expandTriangle2" alt="Expand/Hide" onclick="showBlogPost(2)" />
+      </article>
+      </div>
+    </section>
   </body>
 </html>

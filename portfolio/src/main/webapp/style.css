@@ -1,7 +1,23 @@
+/* General styling */
+
+html {
+  scroll-behavior: smooth;
+}
+
+h1 {
+  text-align: center;
+}
+
+h2 {
+  text-align: center;
+}
+
 /* Website welcome styling */
+
 #welcome-content {
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 40px;
   width: 650px;
   font-family: 'Questrial', sans-serif;
 }
@@ -26,13 +42,24 @@
   margin-right: 10px;
 }
 
+.title {
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
 /* Blog styling */
 
 #blog-content {
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 40px;
   width: 650px;
   font-family: 'Questrial', sans-serif;
+}
+
+.postArea {
+    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 /* Gallery styling */
@@ -40,6 +67,7 @@
 #gallery {
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 40px;
   width: 1200px;
   font-family: 'Questrial', sans-serif;
 }
@@ -66,6 +94,11 @@ img.resize {
   max-height: 80%;
   padding: 2px;
   border: 3px solid #4d0066;
+}
+
+img.resizeSmall {
+  width: 20px;
+  height: 20px;
 }
 
 /* Boxes and borders */
