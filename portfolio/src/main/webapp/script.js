@@ -71,6 +71,9 @@ function showBlogPost(postNum) {
         'for your left hand.'));
     document.getElementById(blogPostId).appendChild(pTag);
   }
+
+  // Automatically scroll window with post now opened.
+  window.scrollBy(0, 500);
 }
 
 /**

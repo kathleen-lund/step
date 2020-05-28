@@ -5,12 +5,18 @@
     <title>Katie's Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+    <style>
+      html {
+          scroll-behavior: smooth;
+      }
+    </style>
   </head>
   <body>
-    <div id="welcome-content">
+    <div id="welcome-content" class="filledBox">
       <h1 style="text-align: center;">Katie's Portfolio</h1>
       <p>Click here to get a random fact about me:</p>
-      <button onclick="addRandomFact()">Fact</button>
+      <button onclick="addRandomFact()" class="button">Fact</button>
       <div id="fact-container"></div>
       <p>Hi, my name is Katie, and I am a rising junior at Washington 
           University in St. Louis. 
@@ -25,18 +31,18 @@
           at WashU!</p>
       <b>Some projects I've worked on...</b>
       <dl>
-        <dt>Project COVID</dt>
+        <dt><b>Project COVID</b></dt>
         <dd>Worked as a Senior Mobile App Developer helping to develop 
             a React Native app to distribute unbiased information about 
             COVID-19. Contributed mainly to the frontend. The app is currently 
             in review on the iOS App Store.</dd>
-        <dt>Invisibly</dt>
+        <dt><b>Invisibly</b></dt>
         <dd>Interned last summer for Square co-founder Jim McKelvey's 
             startup. Worked on creative company side-projects, such as 
             a "tinder for movie trailers" Android mobile app and a driving 
             game app to gamify earning money from
             ads. Used Kotlin, XML, Python, and C# in Unity.</dd>
-        <dt>Hengenlab</dt>
+        <dt><b>Hengenlab</b></dt>
         <dd>Began working as a student research assistant in the Hengenlab 
             at WashU. This is a computational neuroscience lab. In-person 
             lab work included building electrodes for implantation in 
@@ -44,12 +50,19 @@
             my MD/PhD mentor. Remote work included
             analyzing neural data using Python/JupyterLab.</dd>
       </dl>
-      <b>My Links</b><br/>
-      <a href="https://www.linkedin.com/in/katie-lund1/">LinkedIn</a><br/>
-      <a href="https://www.github.com/kathleen-lund">GitHub</a>
+      <b>My Links</b><br/><br/>
+      <a href="https://www.linkedin.com/in/katie-lund1/">
+        <img src="/images/linkedin.png" alt="LinkedIn Logo" 
+            class="logoButton"/>
+      </a>
+      <a href="https://www.github.com/kathleen-lund">
+        <img src="/images/github.png" alt="GitHub Logo" 
+            class="logoButton"/>
+      </a>
     </div>
     <br/>
-    <div id="gallery">
+
+    <div id="gallery" class="borderBox">
     <h2 style="text-align: center;">Katie's Gallery!</h2>
     <div class="row">
       <div class="column">
@@ -114,14 +127,16 @@
           good times at WashU, such as when I did a hackathon presentation with
           a friend or a Women in Computer Science
           general body meeting.</p>
-      <p style="margin-bottom: 40px;">I also love to take pictures of my 
+      <p>I also love to take pictures of my 
           creations when cooking. Some of the ones featured here are peach 
           cobbler and chicken lettuce wraps (just like the ones they make 
           at P.F. Chang's!). Finally, I like to photograph my beagle-basset 
           hound mix Irma, as well as take pictures with my family
           and during family vacations.</p>
     </div>
-    <div id="blog-content">
+    <<div style="margin-bottom: 40px;"></div>
+
+    <div id="blog-content" class="borderBox">
       <h2 style="text-align: center;">Blog Posts!</h2>
       <b>Hidden Talent 1: Bucket Ball</b>
       <img src="/images/righttriangle.jpeg" style="width: 20px; height: 20px;" 
@@ -130,7 +145,8 @@
       <b>Hidden Talent 2: Double Jointedness</b>
       <img src="/images/righttriangle.jpeg" style="width: 20px; height: 20px;" 
         id="expandTriangle2" alt="Expand/Hide" onclick="showBlogPost(2)" /><br/>
-      <div id="blogPostArea2" style="margin-bottom: 50px;"></div>
+      <div id="blogPostArea2" style="margin-bottom: 20px;"></div>
     </div>
+    <div style="margin-bottom: 40px;"></div>
   </body>
 </html>
