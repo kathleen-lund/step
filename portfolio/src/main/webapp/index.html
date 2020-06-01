@@ -7,7 +7,8 @@
     <script src="script.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
   </head>
-  <body>
+  <body onload="getCommentsUsingAsyncAwait()">
+    <div id="greeting-container"></div>
     <section id="welcome-content">
       <div class="filledBox">
       <h1>Katie's Portfolio</h1>
@@ -146,6 +147,12 @@
         <img src="/images/righttriangle.jpeg" class="resizeSmall"
             id="expandTriangle2" alt="Expand/Hide" onclick="showBlogPost(2)" />
       </article>
+      </div>
+    </section>
+    <section id="comment-content">
+      <div class="borderBox">
+        <h2>Comments!</h2>
+        <article id="comment-space"></article>
       </div>
     </section>
   </body>

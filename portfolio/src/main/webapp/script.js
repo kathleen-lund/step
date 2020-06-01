@@ -123,3 +123,29 @@ function hideBlogPost(postNum) {
     }
   }
 }
+
+/**
+ * Another way to use fetch is by using the async and await keywords. This
+ * allows you to use the return values directly instead of going through
+ * Promises.
+ */
+async function getCommentsUsingAsyncAwait() {
+  const response = await fetch('/data');
+  const comments = await response.json();
+  //const comments = await response.text();
+  console.log(comments);
+  let commentArea = document.getElementById("comment-space");
+  if (commentArea !== null) {
+    if (comments !== null) {
+      for (i = 0; i < comments.length; i++) {
+        const comment = comments[i];
+        let paragraphTag = document.createElement("p");
+        console.log(comment);
+        paragraphTag.appendChild(document.createTextNode(comment));
+        if (paragraphTag !== null) {
+          commentArea.appendChild(paragraphTag);
+        }
+      }
+    }
+  }
+}
