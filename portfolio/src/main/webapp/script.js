@@ -15,23 +15,25 @@
 /* Load blog post data once the rest of the page has loaded. */
 let posts = [];
 document.addEventListener('DOMContentLoaded', function() {
-  let p1 = document.createElement("p");
-  p1.appendChild(document.createTextNode('I have a secret love for ' +
+  const p1 = document.createElement('p');
+  p1.appendChild(document.createTextNode(
+      'I have a secret love for ' +
       'bucket balls. Not only am I randomly good at tossing balls in ' +
       'incrementally spaced buckets, but I\'ve had lots of opportunity to ' +
       'do so. Some of my fondest memories are tossing softballs back ' +
       'into the ball bucket from many yards away at the end of practice, ' +
       'to the delight of my teammates.'));
-  let img1 = document.createElement("img");
-  img1.src = "/images/bucketballs.png";
+  const img1 = document.createElement('img');
+  img1.src = '/images/bucketballs.png';
   const post1 = [p1, img1];
 
-  let p2 = document.createElement('p');
-  p2.appendChild(document.createTextNode('My fingers are very ' +
+  const p2 = document.createElement('p');
+  p2.appendChild(document.createTextNode(
+      'My fingers are very ' +
       'double-jointed. I can bend them all downward at the first joint ' +
       'behind the nail, and my thumbs bend backwards in a hitchhiker\'s ' +
       'thumb position. This double-jointedness actually makes it a bit ' +
-      'difficult to play the cello, as collapsing joints are a big no-no ' + 
+      'difficult to play the cello, as collapsing joints are a big no-no ' +
       'for your left hand.'));
   const post2 = [p2];
   posts = [post1, post2];
@@ -41,9 +43,10 @@ document.addEventListener('DOMContentLoaded', function() {
  * Adds a random fact to the page.
  */
 function addRandomFact() {
-  const facts =
-      ['I love hot cheetos.', 'Purple is my favorite color.', 
-      'I\'m horrible at remembering song lyrics.', 'I speak some French.'];
+  const facts = [
+    'I love hot cheetos.', 'Purple is my favorite color.',
+    'I\'m horrible at remembering song lyrics.', 'I speak some French.',
+  ];
 
   // Pick a random fact.
   const fact = facts[Math.floor(Math.random() * facts.length)];
@@ -61,26 +64,27 @@ function addRandomFact() {
 function showBlogPost(postNum) {
   // Find the correct triangle to expand and switch its image.
   // Also change the onclick function for this button to hide the post.
-  const buttonId = "expandTriangle" + postNum;
-  let button = document.getElementById(buttonId);
+  const buttonId = 'expandTriangle' + postNum;
+  const button = document.getElementById(buttonId);
   console.log(button);
   if (button !== null) {
-    button.src = "/images/downtriangle.jpeg";
+    button.src = '/images/downtriangle.jpeg';
     button.onclick = function() {
       hideBlogPost(postNum);
     };
   }
 
   // Add blog post content to the correct area.
-  const blogPostId = "blogPostArea" + postNum;
-  let postArea = document.getElementById(blogPostId);
+  const blogPostId = 'blogPostArea' + postNum;
+  const postArea = document.getElementById(blogPostId);
   if (postArea !== null) {
     if (postNum > 0 && postNum <= posts.length) {
-      const elements = posts[postNum-1]
-      for (i = 0; i < elements.length; i++) {
-        const element = elements[i]
+      const elements = posts[postNum - 1];
+      let i = 0;
+      for (i; i < elements.length; i++) {
+        const element = elements[i];
         if (element !== null) {
-           postArea.appendChild(element);
+          postArea.appendChild(element);
         }
       }
     }
@@ -98,24 +102,24 @@ function showBlogPost(postNum) {
 function hideBlogPost(postNum) {
   // Find the correct triangle to hide and switch its image.
   // Also change the onclick function for this button to show the post.
-  const buttonId = "expandTriangle" + postNum;
-  let button = document.getElementById(buttonId);
-  console.log(button);
+  const buttonId = 'expandTriangle' + postNum;
+  const button = document.getElementById(buttonId);
   if (button !== null) {
-    button.src = "/images/righttriangle.jpeg";
+    button.src = '/images/righttriangle.jpeg';
     button.onclick = function() {
       showBlogPost(postNum);
     };
-  }  
+  }
 
   // Remove blog post content from its area.
-  const blogPostId = "blogPostArea" + postNum;
-  let postArea = document.getElementById(blogPostId);
+  const blogPostId = 'blogPostArea' + postNum;
+  const postArea = document.getElementById(blogPostId);
   if (postArea !== null) {
     if (postNum > 0 && postNum <= posts.length) {
-      const elements = posts[postNum-1]
-      for (i = 0; i < elements.length; i++) {
-        const element = elements[i]
+      const elements = posts[postNum - 1];
+      let i = 0;
+      for (i; i < elements.length; i++) {
+        const element = elements[i];
         if (element !== null) {
           postArea.removeChild(element);
         }
@@ -132,15 +136,14 @@ function hideBlogPost(postNum) {
 async function getCommentsUsingAsyncAwait() {
   const response = await fetch('/data');
   const comments = await response.json();
-  //const comments = await response.text();
-  console.log(comments);
-  let commentArea = document.getElementById("comment-space");
+
+  const commentArea = document.getElementById('comment-space');
   if (commentArea !== null) {
     if (comments !== null) {
-      for (i = 0; i < comments.length; i++) {
+      let i = 0;
+      for (i; i < comments.length; i++) {
         const comment = comments[i];
-        let paragraphTag = document.createElement("p");
-        console.log(comment);
+        const paragraphTag = document.createElement('p');
         paragraphTag.appendChild(document.createTextNode(comment));
         if (paragraphTag !== null) {
           commentArea.appendChild(paragraphTag);
