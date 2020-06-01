@@ -44,8 +44,10 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function addRandomFact() {
   const facts = [
-    'I love hot cheetos.', 'Purple is my favorite color.',
-    'I\'m horrible at remembering song lyrics.', 'I speak some French.',
+    'I love hot cheetos.',
+    'Purple is my favorite color.',
+    'I\'m horrible at remembering song lyrics.',
+    'I speak some French.',
   ];
 
   // Pick a random fact.
