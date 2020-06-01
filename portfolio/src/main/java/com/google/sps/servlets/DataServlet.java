@@ -31,9 +31,9 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // response.setContentType("text/html;");
     // response.getWriter().println("<h1>Hello Katie!</h1>");
-    commentsList.add("I like your site!");
-    commentsList.add("Nice pictures!");
-    commentsList.add("That food looks yummy");
+    // commentsList.add("I like your site!");
+    // commentsList.add("Nice pictures!");
+    // commentsList.add("That food looks yummy");
 
     Gson gson = new Gson();
     String json = gson.toJson(commentsList);
@@ -41,5 +41,29 @@ public class DataServlet extends HttpServlet {
     // Send the JSON as the response
     response.setContentType("application/json;");
     response.getWriter().println(json);
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Get the input from the form.
+    String comment = getComment(request);
+    if (comment == null) {
+      response.setContentType("text/html");
+      response.getWriter().println("Please enter a comment.");
+      return;
+    }
+
+    commentsList.add(comment);
+    
+    // Redirect back to the HTML page.
+    response.sendRedirect("/index.html");
+  }
+
+  /** Returns the comment entered by the user. */
+  private int getComment(HttpServletRequest request) {
+    // Get the input from the form.
+    String commentString = request.getParameter("comment");
+
+    return commentString;
   }
 }
