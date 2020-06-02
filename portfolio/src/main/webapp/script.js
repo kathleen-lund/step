@@ -89,17 +89,77 @@ function hideBlogPost(postNum) {
  * allows you to use the return values directly instead of going through
  * Promises.
  */
-async function getCommentsUsingAsyncAwait() {
-  const response = await fetch('/data');
+async function getComments() {
+  const numComments = getNumComments();
+  if (numComments === -1) {
+      numComments = 5;
+  }
+  const responsePath = '/get-comments?num=' + String(numComments);
+  console.log(responsePath);
+  const response = await fetch(responsePath);
   const comments = await response.json();
 
   const commentArea = document.getElementById('comment-space');
-  if (commentArea !== null && comments !== null) {
-    for (let i = 0; i < comments.length; i++) {
-      const comment = comments[i];
-      const paragraphTag = document.createElement('p');
-      paragraphTag.appendChild(document.createTextNode(comment));
-      commentArea.appendChild(paragraphTag);
+  if (commentArea !== null) {
+    commentArea.innerHTML = "";
+    if (comments !== null) {
+      let i = 0;
+      for (i; i < comments.length; i++) {
+        const comment = comments[i];
+        const commentElement = createCommentElement(comment);
+        commentArea.appendChild(commentElement);
+      }
     }
   }
+}
+
+/**
+ * 
+ */
+function getNumComments() {
+  // 
+  const num = document.getElementById('numComments');
+  if (num !== null) {
+    let numComments = num.options[num.selectedIndex].text;
+    numComments = parseInt(numComments);
+    if (numComments !== NaN) {
+        return numComments;
+    }
+    return -1;
+  }
+  return -1;
+}
+
+/**
+ * Another way to use fetch is by using the async and await keywords. This
+ * allows you to use the return values directly instead of going through
+ * Promises.
+ */
+async function deleteComment(comment) {
+  const params = new URLSearchParams();
+  params.append('id', comment.id);
+  fetch('/delete-comment', {method: 'POST', body: params});
+}
+
+/** Creates an element for a comment, including its delete button. */
+function createCommentElement(comment) {
+  const commentElement = document.createElement('article');
+  commentElement.className = 'comment';
+
+  const text = document.createElement('span');
+  text.innerText = comment.text;
+
+  const deleteButton = document.createElement('button');
+  deleteButton.innerText = 'Delete';
+  deleteButton.className = 'buttonSmall';
+  deleteButton.addEventListener('click', () => {
+    deleteComment(comment);
+
+    // Remove the task from the DOM.
+    commentElement.remove();
+  });
+
+  commentElement.appendChild(text);
+  commentElement.appendChild(deleteButton);
+  return commentElement;
 }
