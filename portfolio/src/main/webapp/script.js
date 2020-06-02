@@ -85,23 +85,25 @@ function hideBlogPost(postNum) {
 }
 
 /**
- * Another way to use fetch is by using the async and await keywords. This
- * allows you to use the return values directly instead of going through
- * Promises.
+ * Gets the requested number of comments using the GetCommentsServlet
+ * and adds them to the site interface.
  */
 async function getComments() {
-  const numComments = getNumComments();
+  let numComments = getNumComments();
   if (numComments === -1) {
-      numComments = 5;
+    // If number was unable to be parsed, default to 5
+    numComments = 5;
   }
+
+  // Fetch correct number of comments from servlet
   const responsePath = '/get-comments?num=' + String(numComments);
-  console.log(responsePath);
   const response = await fetch(responsePath);
   const comments = await response.json();
 
   const commentArea = document.getElementById('comment-space');
   if (commentArea !== null) {
-    commentArea.innerHTML = "";
+    // Clear comment area in case page is being reloaded
+    commentArea.innerHTML = '';
     if (comments !== null) {
       let i = 0;
       for (i; i < comments.length; i++) {
@@ -114,16 +116,21 @@ async function getComments() {
 }
 
 /**
- * 
+ * Retrieve the number of comments to display from the
+ * drop-down menu.
+ * @return {number} the number of comments requested,
+ * or -1 if it could not be found.
  */
 function getNumComments() {
-  // 
+  // Get the selected number from the dropdown
   const num = document.getElementById('numComments');
   if (num !== null) {
     let numComments = num.options[num.selectedIndex].text;
+
+    // Parse String to int to return
     numComments = parseInt(numComments);
-    if (numComments !== NaN) {
-        return numComments;
+    if (!isNaN(numComments)) {
+      return numComments;
     }
     return -1;
   }
@@ -131,9 +138,8 @@ function getNumComments() {
 }
 
 /**
- * Another way to use fetch is by using the async and await keywords. This
- * allows you to use the return values directly instead of going through
- * Promises.
+ * Delete a comment using its id and the
+ * DeleteCommentServlet.
  */
 async function deleteComment(comment) {
   const params = new URLSearchParams();
@@ -141,24 +147,31 @@ async function deleteComment(comment) {
   fetch('/delete-comment', {method: 'POST', body: params});
 }
 
-/** Creates an element for a comment, including its delete button. */
+/**
+ * Creates an element for a comment, including its delete button.
+ */
 function createCommentElement(comment) {
+  // Article tag to encapsulate comment elements
   const commentElement = document.createElement('article');
   commentElement.className = 'comment';
 
+  // Span tag for the comment text
   const text = document.createElement('span');
   text.innerText = comment.text;
 
+  // Delete button for each comment
   const deleteButton = document.createElement('button');
   deleteButton.innerText = 'Delete';
   deleteButton.className = 'buttonSmall';
   deleteButton.addEventListener('click', () => {
+    // Delete function to remove this comment from Datastore
     deleteComment(comment);
 
-    // Remove the task from the DOM.
+    // Remove the comment from the DOM
     commentElement.remove();
   });
 
+  // Append text and delete button to overall element
   commentElement.appendChild(text);
   commentElement.appendChild(deleteButton);
   return commentElement;

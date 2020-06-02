@@ -17,12 +17,12 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.datastore.FetchOptions;
-import com.google.sps.data.Comment;
 import com.google.gson.Gson;
+import com.google.sps.data.Comment;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +31,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet responsible for listing tasks. */
+/** Servlet responsible for getting comments from Datastore. */
 @WebServlet("/get-comments")
 public class GetCommentsServlet extends HttpServlet {
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-      // Get the number of comments requested.
+    // Get the number of comments requested.
     String numCommentsString = request.getParameter("num");
 
     // Convert the input to an int.
@@ -50,21 +49,21 @@ public class GetCommentsServlet extends HttpServlet {
     }
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
 
+    // Query Datastore for with limit for number of comments requested
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
     List<Entity> resultsLess = results.asList(FetchOptions.Builder.withLimit(numComments));
 
+    // Build comments list with Entities retrieved from Query
     List<Comment> comments = new ArrayList<>();
     for (Entity entity : resultsLess) {
       long id = entity.getKey().getId();
       String text = (String) entity.getProperty("text");
       long timestamp = (long) entity.getProperty("timestamp");
 
+      // Comment object to hold all info
       Comment comment = new Comment(id, text, timestamp);
       comments.add(comment);
-    //   if (comments.size() >= numComments) {
-    //     break;
-    //   }
     }
 
     Gson gson = new Gson();
