@@ -7,7 +7,7 @@
     <script src="script.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet" />
   </head>
-  <body onload="getCommentsUsingAsyncAwait()">
+  <body onload="getComments()">
     <div id="greeting-container"></div>
     <section id="welcome-content">
       <div class="filledBox">
@@ -174,6 +174,13 @@
     <section id="comment-content">
       <div class="borderBox">
         <h2>Comments!</h2>
+        <label for="numComments">Display:</label>
+          <select name="numComments" id="numComments" onchange="getComments()">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+        </select>
         <form action="/data" method="post">
           <p>Enter a comment:</p>
           <input type="text" name="user-comment" class="inputBox" />
