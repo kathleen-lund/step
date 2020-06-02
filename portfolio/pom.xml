@@ -43,19 +43,6 @@
           <deploy.version>2</deploy.version>
         </configuration>
       </plugin>
-      <!-- New plugin necessary to deploy because old plugin is deprecated. 
-      Can use `mvn appengine:run` for local testing. 
-      Can use `mvn appengine:deploy` for deploying. -->
-      <plugin>
-        <groupId>com.google.cloud.tools</groupId>
-        <artifactId>appengine-maven-plugin</artifactId>
-        <version>2.2.0</version>
-        <!-- TODO: uncomment configuration block and provide project ID. -->
-        <!-- <configuration>
-            <deploy.projectId>YOUR_PROJECT_ID_HERE</deploy.projectId>
-            <deploy.version>1</deploy.version>
-        </configuration> -->
-      </plugin>
     </plugins>
   </build>
 </project>
