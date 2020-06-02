@@ -21,12 +21,15 @@ import java.util.List;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.gson.Gson;
+import java.io.IOException;
+import java.util.ArrayList;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+/** Servlet that returns some example content. */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   static final String COMMENT_INPUT_ID = "user-comment";
@@ -45,20 +48,19 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get the input from the form.
+    // Get the comment text
     String comment = getComment(request);
-
     if (comment == null) {
       return;
     }
-    //commentsList.add(comment);
-
     long timestamp = System.currentTimeMillis();
 
+    // Create entity and load with data
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("text", comment);
     commentEntity.setProperty("timestamp", timestamp);
 
+    // Put entity into Datastore
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
 
@@ -66,9 +68,12 @@ public class DataServlet extends HttpServlet {
     response.sendRedirect("/index.html");
   }
 
-  /** Returns the comment entered by the user. */
+  /**
+   * Returns the comment entered by the user.
+   */
   private String getComment(HttpServletRequest request) {
     // Get the input from the form.
     return request.getParameter(COMMENT_INPUT_ID);
   }
 }
+

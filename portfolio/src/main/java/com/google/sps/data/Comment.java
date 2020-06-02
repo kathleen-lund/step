@@ -14,9 +14,8 @@
 
 package com.google.sps.data;
 
-/** An item on a todo list. */
+/** A comment on the portfolio page. */
 public final class Comment {
-
   private final long id;
   private final String text;
   private final long timestamp;
