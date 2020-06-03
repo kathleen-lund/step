@@ -101,16 +101,13 @@ async function getComments() {
   const comments = await response.json();
 
   const commentArea = document.getElementById('comment-space');
-  if (commentArea !== null) {
+  if (commentArea !== null && comments !== null) {
     // Clear comment area in case page is being reloaded
     commentArea.innerHTML = '';
-    if (comments !== null) {
-      let i = 0;
-      for (i; i < comments.length; i++) {
-        const comment = comments[i];
-        const commentElement = createCommentElement(comment);
-        commentArea.appendChild(commentElement);
-      }
+    for (let i = 0; i < comments.length; i++) {
+      const comment = comments[i];
+      const commentElement = createCommentElement(comment);
+      commentArea.appendChild(commentElement);
     }
   }
 }
