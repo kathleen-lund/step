@@ -1,151 +1,185 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Katie's Portfolio</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet" />
   </head>
-  <body>
+  <body onload="getCommentsUsingAsyncAwait()">
+    <div id="greeting-container"></div>
     <section id="welcome-content">
       <div class="filledBox">
-      <h1>Katie's Portfolio</h1>
-      <p>Click here to get a random fact about me:</p>
-      <button onclick="addRandomFact()" class="button">Fact</button>
-      <div id="fact-container"></div>
-      <p>Hi, my name is Katie, and I am a rising junior at Washington 
-          University in St. Louis. 
-          I'm studying computer science and cognitive neuroscience. 
-          I am originally from a suburb of Chicago called Libertyville, IL. 
-          For fun, I like to play my cello or have family game nights!</p>
-      <p>At school, I play cello in the symphony orchestra. I love to try
-          new brunch places with my friends and get mozzarella sticks on 
-          Fridays at the cafeteria. I am also the president of 
-          Women in Computer Science on
-          campus. I love being active in the engineering community 
-          at WashU!</p>
-      <b>Some projects I've worked on...</b>
-      <dl>
-        <dt><b>Project COVID</b></dt>
-        <dd>Worked as a Senior Mobile App Developer helping to develop 
-            a React Native app to distribute unbiased information about 
-            COVID-19. Contributed mainly to the frontend. The app is currently 
-            in review on the iOS App Store.</dd>
-        <dt><b>Invisibly</b></dt>
-        <dd>Interned last summer for Square co-founder Jim McKelvey's 
-            startup. Worked on creative company side-projects, such as 
-            a "tinder for movie trailers" Android mobile app and a driving 
-            game app to gamify earning money from
-            ads. Used Kotlin, XML, Python, and C# in Unity.</dd>
-        <dt><b>Hengenlab</b></dt>
-        <dd>Began working as a student research assistant in the Hengenlab 
-            at WashU. This is a computational neuroscience lab. In-person 
-            lab work included building electrodes for implantation in 
-            mice, assisting with surgeries, and discussing analysis with 
-            my MD/PhD mentor. Remote work included
-            analyzing neural data using Python/JupyterLab.</dd>
-      </dl>
-      <div class="title">My Links</div>
-      <a href="https://www.linkedin.com/in/katie-lund1/">
-        <img src="/images/linkedin.png" alt="LinkedIn Logo" 
-            class="logoButton"/>
-      </a>
-      <a href="https://www.github.com/kathleen-lund">
-        <img src="/images/github.png" alt="GitHub Logo" 
-            class="logoButton"/>
-      </a>
+        <h1>Katie's Portfolio</h1>
+        <p>Click here to get a random fact about me:</p>
+        <button type="button" onclick="addRandomFact()" class="button">Fact</button>
+        <div id="fact-container"></div>
+        <p>
+          Hi, my name is Katie, and I am a rising junior at Washington University in St. Louis. I'm studying computer
+          science and cognitive neuroscience. I am originally from a suburb of Chicago called Libertyville, IL. For fun,
+          I like to play my cello or have family game nights!
+        </p>
+        <p>
+          At school, I play cello in the symphony orchestra. I love to try new brunch places with my friends and get
+          mozzarella sticks on Fridays at the cafeteria. I am also the president of Women in Computer Science on campus.
+          I love being active in the engineering community at WashU!
+        </p>
+        <b>Some projects I've worked on...</b>
+        <dl>
+          <dt><b>Project COVID</b></dt>
+          <dd>
+            Worked as a Senior Mobile App Developer helping to develop a React Native app to distribute unbiased
+            information about COVID-19. Contributed mainly to the frontend. The app is currently in review on the iOS
+            App Store.
+          </dd>
+          <dt><b>Invisibly</b></dt>
+          <dd>
+            Interned last summer for Square co-founder Jim McKelvey's startup. Worked on creative company side-projects,
+            such as a "tinder for movie trailers" Android mobile app and a driving game app to gamify earning money from
+            ads. Used Kotlin, XML, Python, and C# in Unity.
+          </dd>
+          <dt><b>Hengenlab</b></dt>
+          <dd>
+            Began working as a student research assistant in the Hengenlab at WashU. This is a computational
+            neuroscience lab. In-person lab work included building electrodes for implantation in mice, assisting with
+            surgeries, and discussing analysis with my MD/PhD mentor. Remote work included analyzing neural data using
+            Python/JupyterLab.
+          </dd>
+        </dl>
+        <div class="title">My Links</div>
+        <a href="https://www.linkedin.com/in/katie-lund1/">
+          <img src="/images/linkedin.png" alt="LinkedIn Logo" class="logoButton" />
+        </a>
+        <a href="https://www.github.com/kathleen-lund">
+          <img src="/images/github.png" alt="GitHub Logo" class="logoButton" />
+        </a>
       </div>
     </section>
 
     <section id="gallery">
-    <div class="borderBox">
-    <h2>Katie's Gallery!</h2>
-    <div class="row">
-      <div class="column">
-        <img src="/images/cubs.JPG" alt="Cubs game" class="resize"/>
+      <div class="borderBox">
+        <h2>Katie's Gallery!</h2>
+        <div class="row">
+          <div class="column">
+            <img src="/images/cubs.JPG" alt="Cubs game" class="resize" />
+          </div>
+          <div class="column">
+            <img src="/images/goog.jpg" alt="At Google Chicago" class="resize" />
+          </div>
+          <div class="column">
+            <img src="/images/lionsgate.JPG" alt="At Lionsgate HQ" class="resize" />
+          </div>
+          <div class="column">
+            <img src="/images/ghc.jpg" alt="At GHC" class="resize" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="column">
+            <img src="/images/food4.JPG" alt="Peach cobbler" class="resize" />
+          </div>
+          <div class="column">
+            <img src="/images/boba.JPG" alt="Bubble tea" class="resize" />
+          </div>
+          <div class="column">
+            <img src="/images/hats.JPG" alt="Hat selfie" class="resize" />
+          </div>
+          <div class="column">
+            <img src="/images/hawaii.JPG" alt="Hawaii" class="resize" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="column">
+            <img src="/images/food1.JPG" alt="Salad" class="resize" />
+          </div>
+          <div class="column">
+            <img src="/images/food2.JPG" alt="Pasta" class="resize" />
+          </div>
+          <div class="column">
+            <img src="/images/food3.JPG" alt="Lettuce wraps" class="resize" />
+          </div>
+          <div class="column">
+            <img src="/images/irma.JPG" alt="My dog" class="resize" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="column">
+            <img src="/images/selfie.JPG" alt="WashU selfie" class="resize" />
+          </div>
+          <div class="column">
+            <img src="/images/pennapps.jpg" alt="Hackathon presentation" class="resize" />
+          </div>
+          <div class="column">
+            <img src="/images/goog2.JPG" alt="Google booth" class="resize" />
+          </div>
+          <div class="column">
+            <img src="/images/wics.PNG" alt="WiCS GBM" class="resize" />
+          </div>
+        </div>
+        <p>
+          I like to photograph exciting events I go to, such as photographing the Google booth at the Grace Hopper
+          Celebration or posing by the Google Cloud logo in the Chicago office. I love to take pictures of good times at
+          WashU, such as when I did a hackathon presentation with a friend or a Women in Computer Science general body
+          meeting.
+        </p>
+        <p>
+          I also love to take pictures of my creations when cooking. Some of the ones featured here are peach cobbler
+          and chicken lettuce wraps (just like the ones they make at P.F. Chang's!). Finally, I like to photograph my
+          beagle-basset hound mix Irma, as well as take pictures with my family and during family vacations.
+        </p>
       </div>
-      <div class="column">
-        <img src="/images/goog.jpg" alt="At Google Chicago" class="resize"/>
-      </div>
-      <div class="column">
-        <img src="/images/lionsgate.JPG" alt="At Lionsgate HQ" class="resize"/>
-      </div>
-      <div class="column">
-        <img src="/images/ghc.jpg" alt="At GHC" class="resize"/>
-      </div> 
-    </div>
-    <div class="row">
-      <div class="column">
-        <img src="/images/food4.JPG" alt="Peach cobbler" class="resize"/>
-      </div>
-      <div class="column">
-        <img src="/images/boba.JPG" alt="Bubble tea" class="resize"/>
-      </div>
-      <div class="column">
-        <img src="/images/hats.JPG" alt="Hat selfie" class="resize"/>
-      </div> 
-      <div class="column">
-        <img src="/images/hawaii.JPG" alt="Hawaii" class="resize"/>
-      </div>
-    </div>
-    <div class="row">
-      <div class="column">
-        <img src="/images/food1.JPG" alt="Salad" class="resize"/>
-      </div>
-      <div class="column">
-        <img src="/images/food2.JPG" alt="Pasta" class="resize"/>
-      </div>
-      <div class="column">
-        <img src="/images/food3.JPG" alt="Lettuce wraps" class="resize"/>
-      </div>
-      <div class="column">
-        <img src="/images/irma.JPG" alt="My dog" class="resize"/>
-      </div>
-    </div>
-    <div class="row">
-      <div class="column">
-        <img src="/images/selfie.JPG" alt="WashU selfie" class="resize"/>
-      </div>
-      <div class="column">
-        <img src="/images/pennapps.jpg" alt="Hackathon presentation" 
-          class="resize"/>
-      </div>
-      <div class="column">
-        <img src="/images/goog2.JPG" alt="Google booth" class="resize"/>
-      </div>
-      <div class="column">
-        <img src="/images/wics.PNG" alt="WiCS GBM" class="resize"/>
-      </div>
-    </div>
-      <p>I like to photograph exciting events I go to, such as photographing
-          the Google booth at the Grace Hopper Celebration or posing by the 
-          Google Cloud logo in the Chicago office. I love to take pictures of
-          good times at WashU, such as when I did a hackathon presentation with
-          a friend or a Women in Computer Science
-          general body meeting.</p>
-      <p>I also love to take pictures of my 
-          creations when cooking. Some of the ones featured here are peach 
-          cobbler and chicken lettuce wraps (just like the ones they make 
-          at P.F. Chang's!). Finally, I like to photograph my beagle-basset 
-          hound mix Irma, as well as take pictures with my family
-          and during family vacations.</p>
-    </div>
     </section>
 
     <section id="blog-content">
       <div class="borderBox">
-      <h2>Blog Posts!</h2>
-      <article id="blogPostArea1" class="postArea">
-        <b>Hidden Talent 1: Bucket Ball</b>
-        <img src="/images/righttriangle.jpeg" class="resizeSmall" 
-            id="expandTriangle1" alt="Expand/Hide" onclick="showBlogPost(1)" />
-      </article>
-      <article id="blogPostArea2" class="postArea">
-        <b>Hidden Talent 2: Double Jointedness</b>
-        <img src="/images/righttriangle.jpeg" class="resizeSmall"
-            id="expandTriangle2" alt="Expand/Hide" onclick="showBlogPost(2)" />
-      </article>
+        <h2>Blog Posts!</h2>
+        <article id="blogPostArea1" class="postArea">
+          <b>Hidden Talent 1: Bucket Ball</b>
+          <img
+            src="/images/righttriangle.jpeg"
+            class="resizeSmall"
+            id="expandTriangle1"
+            alt="Expand/Hide"
+            onclick="showBlogPost(1)"
+          />
+          <div id="blogPost1" class="blogPost">
+            <p>
+              I have a secret love for bucket balls. Not only am I randomly good at tossing balls in incrementally
+              spaced buckets, but I've had lots of opportunity to do so. Some of my fondest memories are tossing
+              softballs back into the ball bucket from many yards away at the end of practice, to the delight of my
+              teammates.
+            </p>
+            <img src="/images/bucketballs.png" alt="Bucket Balls" />
+          </div>
+        </article>
+        <article id="blogPostArea2" class="postArea">
+          <b>Hidden Talent 2: Double Jointedness</b>
+          <img
+            src="/images/righttriangle.jpeg"
+            class="resizeSmall"
+            id="expandTriangle2"
+            alt="Expand/Hide"
+            onclick="showBlogPost(2)"
+          />
+          <div id="blogPost2" class="blogPost">
+            <p>
+              My fingers are very double-jointed. I can bend them all downward at the first joint behind the nail, and
+              my thumbs bend backwards in a hitchhiker's thumb position. This double-jointedness actually makes it a bit
+              difficult to play the cello, as collapsing joints are a big no-no for your left hand.
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section id="comment-content">
+      <div class="borderBox">
+        <h2>Comments!</h2>
+        <form action="/data" method="post">
+          <p>Enter a comment:</p>
+          <input type="text" name="user-comment" class="inputBox" />
+          <button type="submit" class="button">Submit</button>
+        </form>
+        <article id="comment-space"></article>
       </div>
     </section>
   </body>
