@@ -17,6 +17,7 @@ package com.google.sps.servlets;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +26,9 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  private ArrayList<String> commentsList = new ArrayList<String>();
+  static final String COMMENT_INPUT_ID = "user-comment";
+
+  private List<String> commentsList = new ArrayList<>();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -54,7 +57,6 @@ public class DataServlet extends HttpServlet {
   /** Returns the comment entered by the user. */
   private String getComment(HttpServletRequest request) {
     // Get the input from the form.
-    String commentString = request.getParameter("user-comment");
-    return commentString;
+    return request.getParameter(COMMENT_INPUT_ID);
   }
 }
