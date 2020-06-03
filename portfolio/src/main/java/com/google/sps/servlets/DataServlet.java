@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   static final String COMMENT_INPUT_ID = "user-comment";
+  static final String USERNAME_ID = "user-name";
 
   private List<String> commentsList = new ArrayList<>();
 
@@ -44,11 +45,16 @@ public class DataServlet extends HttpServlet {
       return;
     }
     long timestamp = System.currentTimeMillis();
+    String username = getUsername(request);
+    if (username == null) {
+        return;
+    }
 
     // Create entity and load with data
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("text", comment);
     commentEntity.setProperty("timestamp", timestamp);
+    commentEntity.setProperty("username", username);
 
     // Put entity into Datastore
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -64,6 +70,14 @@ public class DataServlet extends HttpServlet {
   private String getComment(HttpServletRequest request) {
     // Get the input from the form.
     return request.getParameter(COMMENT_INPUT_ID);
+  }
+
+  /**
+   * Returns the name entered by the user.
+   */
+  private String getUsername(HttpServletRequest request) {
+    // Get the input from the form.
+    return request.getParameter(USERNAME_ID);
   }
 }
 

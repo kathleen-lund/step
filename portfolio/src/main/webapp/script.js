@@ -152,6 +152,11 @@ function createCommentElement(comment) {
   const commentElement = document.createElement('article');
   commentElement.className = 'comment';
 
+  // Bold tag for the username
+  const username = document.createElement('b');
+  const usernameStr = comment.username + ":";
+  username.innerText = usernameStr;
+
   // Span tag for the comment text
   const text = document.createElement('span');
   text.innerText = comment.text;
@@ -168,7 +173,8 @@ function createCommentElement(comment) {
     commentElement.remove();
   });
 
-  // Append text and delete button to overall element
+  // Append username, text, and delete button to overall element
+  commentElement.appendChild(username);
   commentElement.appendChild(text);
   commentElement.appendChild(deleteButton);
   return commentElement;

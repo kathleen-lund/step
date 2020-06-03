@@ -60,9 +60,10 @@ public class GetCommentsServlet extends HttpServlet {
       long id = entity.getKey().getId();
       String text = (String) entity.getProperty("text");
       long timestamp = (long) entity.getProperty("timestamp");
+      String username = (String) entity.getProperty("username");
 
       // Comment object to hold all info
-      Comment comment = new Comment(id, text, timestamp);
+      Comment comment = new Comment(id, text, timestamp, username);
       comments.add(comment);
     }
 
