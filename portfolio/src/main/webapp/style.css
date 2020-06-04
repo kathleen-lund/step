@@ -140,10 +140,11 @@ img.resizeSmall {
   flex-grow: 1;
   line-break: strict;
   margin-right: 8px;
+  overflow: hidden;
   overflow-wrap: break-word;
   white-space: pre-wrap;
   width: 450px;
-  word-break: break-word;
+  word-wrap: break-word;
 }
 
 /* Boxes and borders */
