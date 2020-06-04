@@ -154,7 +154,7 @@ function createCommentElement(comment) {
 
   // Bold tag for the username
   const username = document.createElement('b');
-  const usernameStr = comment.username + ":";
+  const usernameStr = comment.username + ':';
   username.innerText = usernameStr;
 
   // Span tag for the comment text
