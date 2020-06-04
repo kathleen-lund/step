@@ -32,8 +32,6 @@ public class DataServlet extends HttpServlet {
   static final String COMMENT_INPUT_ID = "user-comment";
   static final String USERNAME_ID = "user-name";
 
-  private List<String> commentsList = new ArrayList<>();
-
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the comment text

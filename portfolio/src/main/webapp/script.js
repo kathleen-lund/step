@@ -95,8 +95,15 @@ async function getComments() {
     numComments = 5;
   }
 
+  let commentOrder = getCommentOrder();
+  if (commentOrder == null) {
+    // If could not find comment order, default to newest first
+    commentOrder = 'newest';
+  }
+
   // Fetch correct number of comments from servlet
-  const responsePath = '/get-comments?num=' + String(numComments);
+  const responsePath =
+      '/get-comments?num=' + String(numComments) + '&order=' + commentOrder;
   const response = await fetch(responsePath);
   const comments = await response.json();
 
@@ -129,9 +136,23 @@ function getNumComments() {
     if (!isNaN(numComments)) {
       return numComments;
     }
-    return -1;
   }
   return -1;
+}
+
+/**
+ * Retrieve the comment order to display from the
+ * drop-down menu.
+ * @return {String} the order requested for comment
+ * viewing, or null if it was not found.
+ */
+function getCommentOrder() {
+  // Get the selected number from the dropdown
+  const order = document.getElementById('commentOrder');
+  if (order !== null) {
+    return order.options[order.selectedIndex].value;
+  }
+  return null;
 }
 
 /**
@@ -157,9 +178,22 @@ function createCommentElement(comment) {
   const usernameStr = comment.username + ':';
   username.innerText = usernameStr;
 
+  // Timestamp
+  const date = new Date(comment.timestamp);
+  const month = date.getMonth() + 1;
+  const day = date.getDay();
+  const year = date.getFullYear();
+  const hour = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+  const minute = '0' + date.getMinutes();
+  const label = date.getHours() > 12 ? 'pm' : 'am';
+  const formatted = month + '/' + day + '/' + year + ', ' + hour + ':' +
+      minute.substr(-2) + label;
+
   // Span tag for the comment text
   const text = document.createElement('span');
-  text.innerText = comment.text;
+  const html = ' ' + comment.text + '\n <i>' + formatted + '</i>';
+  // text.innerText = comment.text;
+  text.innerHTML = html;
 
   // Delete button for each comment
   const deleteButton = document.createElement('button');
@@ -172,6 +206,7 @@ function createCommentElement(comment) {
     // Remove the comment from the DOM
     commentElement.remove();
   });
+
 
   // Append username, text, and delete button to overall element
   commentElement.appendChild(username);

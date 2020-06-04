@@ -47,7 +47,15 @@ public class GetCommentsServlet extends HttpServlet {
       System.err.println("Could not convert to int: " + numCommentsString);
       return;
     }
-    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+
+    String commentOrderString = request.getParameter("order");
+
+    Query query;
+    if (commentOrderString.equals("oldest")) {
+      query = new Query("Comment").addSort("timestamp", SortDirection.ASCENDING);
+    } else {
+      query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+    }
 
     // Query Datastore for with limit for number of comments requested
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
