@@ -11,11 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+/* Global variables to support comment pagination */
 let pageNum = 0;
 let numComments = 5;
 let atBeginning = true;
 let atEnd = false;
-
 
 /**
  * Adds a random fact to the page.
@@ -90,8 +91,9 @@ function hideBlogPost(postNum) {
 }
 
 /**
- * Gets the requested number of comments using the GetCommentsServlet
- * and adds them to the site interface.
+ * Gets the comments using the GetCommentsServlet
+ * and adds them to the site interface. Supports
+ * pagination between to see all comments.
  */
 async function getComments() {
   let commentOrder = getCommentOrder();
@@ -99,10 +101,9 @@ async function getComments() {
     // If could not find comment order, default to newest first
     commentOrder = 'newest';
   }
-  console.log(numComments + "buh");
-  // Fetch correct number of comments from servlet
-  const responsePath =
-      '/get-comments?num=' + String(numComments) + '&order=' + commentOrder;
+
+  // Fetch comments from servlet
+  const responsePath = '/get-comments?order=' + commentOrder;
   const response = await fetch(responsePath);
   const comments = await response.json();
 
@@ -110,26 +111,27 @@ async function getComments() {
   if (commentArea !== null && comments !== null) {
     // Clear comment area in case page is being reloaded
     commentArea.innerHTML = '';
-    const start = pageNum*numComments;
-    const end = (start + numComments) >= comments.length ? comments.length : start + numComments;
+
+    // Calculate which comments to start and end at
+    const start = pageNum * numComments;
+    const end = (start + numComments) >= comments.length ? comments.length :
+                                                           start + numComments;
+    // Update globals and button appearances
     if (start === 0) {
       atBeginning = true;
-      document.getElementById("prevButton").className = "unavailableButton";
-    }
-    else {
+      document.getElementById('prevButton').className = 'unavailableButton';
+    } else {
       atBeginning = false;
-      document.getElementById("prevButton").className = "availableButton";
+      document.getElementById('prevButton').className = 'availableButton';
     }
     if (end === comments.length) {
       atEnd = true;
-      document.getElementById("nextButton").className = "unavailableButton";
-    }
-    else {
+      document.getElementById('nextButton').className = 'unavailableButton';
+    } else {
       atEnd = false;
-      document.getElementById("nextButton").className = "availableButton";
+      document.getElementById('nextButton').className = 'availableButton';
     }
-    atBeginning = start === 0 ? true : false;
-    atEnd = end === comments.length ? true : false;
+
     for (let i = start; i < end; i++) {
       const comment = comments[i];
       const commentElement = createCommentElement(comment);
@@ -143,22 +145,22 @@ async function getComments() {
  * drop-down menu, and re-load comments.
  */
 function changeNumComments() {
+  // Start the page back at 0
   pageNum = 0;
-  // Get the selected number from the dropdown
+
+  // Get the newly selected number from the dropdown
   const num = document.getElementById('numComments');
   if (num !== null) {
     numComments = num.options[num.selectedIndex].text;
-    console.log(numComments);
-    // Parse String to int to return
+    // Parse String to int
     numComments = parseInt(numComments);
     if (isNaN(numComments)) {
+      // Default to 5 comments
       numComments = 5;
-      console.log("here1");
     }
-  }
-  else {
-   numComments = 5;
-   console.log("here2");
+  } else {
+    // Default to show 5 comments
+    numComments = 5;
   }
   getComments();
 }
@@ -239,7 +241,8 @@ function createCommentElement(comment) {
 }
 
 /**
- * 
+ * Moves to next page if not currently at the end of
+ * pages, and gets/displays comments for the new page.
  */
 function advancePage() {
   if (!atEnd) {
@@ -249,7 +252,9 @@ function advancePage() {
 }
 
 /**
- * 
+ * Moves to the previous page if not currently at
+ * the beginning of pages, and gets/displays
+ * comments for the new page.
  */
 function previousPage() {
   if (!atBeginning) {

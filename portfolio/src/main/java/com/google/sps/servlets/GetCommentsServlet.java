@@ -36,18 +36,6 @@ import javax.servlet.http.HttpServletResponse;
 public class GetCommentsServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get the number of comments requested.
-    String numCommentsString = request.getParameter("num");
-
-    // Convert the input to an int.
-    int numComments;
-    try {
-      numComments = Integer.parseInt(numCommentsString);
-    } catch (NumberFormatException e) {
-      System.err.println("Could not convert to int: " + numCommentsString);
-      return;
-    }
-
     String commentOrderString = request.getParameter("order");
 
     Query query;
@@ -57,10 +45,9 @@ public class GetCommentsServlet extends HttpServlet {
       query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     }
 
-    // Query Datastore for with limit for number of comments requested
+    // Query Datastore for all comments (to support pagination)
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
-    // List<Entity> resultsLess = results.asList(FetchOptions.Builder.withLimit(numComments));
 
     // Build comments list with Entities retrieved from Query
     List<Comment> comments = new ArrayList<>();

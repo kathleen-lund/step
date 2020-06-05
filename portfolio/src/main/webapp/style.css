@@ -21,9 +21,13 @@ ul {
   background-color: #f2e6ff;
   display: flex;
   height: 60px;
+  left: 0;
   margin: 0;
   overflow: hidden;
   padding: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
 }
 
 li {
@@ -42,7 +46,7 @@ li a {
 }
 
 li a:hover {
-  background-color: #ccccff;
+  background-color: #e6ccff;
 }
 
 /* Website welcome styling */
@@ -53,7 +57,7 @@ li a:hover {
   margin-bottom: 40px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 40px;
+  margin-top: 90px;
   width: 650px;
 }
 
@@ -129,7 +133,7 @@ li a:hover {
   margin-bottom: 40px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 40px;
+  margin-top: 90px;
   width: 650px;
 }
 
@@ -154,7 +158,7 @@ li a:hover {
   margin-bottom: 40px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 40px;
+  margin-top: 90px;
   width: 1200px;
 }
 
