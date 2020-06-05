@@ -60,11 +60,11 @@ public class GetCommentsServlet extends HttpServlet {
     // Query Datastore for with limit for number of comments requested
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
-    List<Entity> resultsLess = results.asList(FetchOptions.Builder.withLimit(numComments));
+    // List<Entity> resultsLess = results.asList(FetchOptions.Builder.withLimit(numComments));
 
     // Build comments list with Entities retrieved from Query
     List<Comment> comments = new ArrayList<>();
-    for (Entity entity : resultsLess) {
+    for (Entity entity : results.asIterable()) {
       long id = entity.getKey().getId();
       String text = (String) entity.getProperty("text");
       long timestamp = (long) entity.getProperty("timestamp");

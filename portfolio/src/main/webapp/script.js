@@ -11,6 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+let pageNum = 0;
+let numComments = 5;
+let atBeginning = true;
+let atEnd = false;
+
 
 /**
  * Adds a random fact to the page.
@@ -89,18 +94,12 @@ function hideBlogPost(postNum) {
  * and adds them to the site interface.
  */
 async function getComments() {
-  let numComments = getNumComments();
-  if (numComments === -1) {
-    // If number was unable to be parsed, default to 5
-    numComments = 5;
-  }
-
   let commentOrder = getCommentOrder();
   if (commentOrder == null) {
     // If could not find comment order, default to newest first
     commentOrder = 'newest';
   }
-
+  console.log(numComments + "buh");
   // Fetch correct number of comments from servlet
   const responsePath =
       '/get-comments?num=' + String(numComments) + '&order=' + commentOrder;
@@ -111,7 +110,27 @@ async function getComments() {
   if (commentArea !== null && comments !== null) {
     // Clear comment area in case page is being reloaded
     commentArea.innerHTML = '';
-    for (let i = 0; i < comments.length; i++) {
+    const start = pageNum*numComments;
+    const end = (start + numComments) >= comments.length ? comments.length : start + numComments;
+    if (start === 0) {
+      atBeginning = true;
+      document.getElementById("prevButton").className = "unavailableButton";
+    }
+    else {
+      atBeginning = false;
+      document.getElementById("prevButton").className = "availableButton";
+    }
+    if (end === comments.length) {
+      atEnd = true;
+      document.getElementById("nextButton").className = "unavailableButton";
+    }
+    else {
+      atEnd = false;
+      document.getElementById("nextButton").className = "availableButton";
+    }
+    atBeginning = start === 0 ? true : false;
+    atEnd = end === comments.length ? true : false;
+    for (let i = start; i < end; i++) {
       const comment = comments[i];
       const commentElement = createCommentElement(comment);
       commentArea.appendChild(commentElement);
@@ -121,23 +140,27 @@ async function getComments() {
 
 /**
  * Retrieve the number of comments to display from the
- * drop-down menu.
- * @return {number} the number of comments requested,
- * or -1 if it could not be found.
+ * drop-down menu, and re-load comments.
  */
-function getNumComments() {
+function changeNumComments() {
+  pageNum = 0;
   // Get the selected number from the dropdown
   const num = document.getElementById('numComments');
   if (num !== null) {
-    let numComments = num.options[num.selectedIndex].text;
-
+    numComments = num.options[num.selectedIndex].text;
+    console.log(numComments);
     // Parse String to int to return
     numComments = parseInt(numComments);
-    if (!isNaN(numComments)) {
-      return numComments;
+    if (isNaN(numComments)) {
+      numComments = 5;
+      console.log("here1");
     }
   }
-  return -1;
+  else {
+   numComments = 5;
+   console.log("here2");
+  }
+  getComments();
 }
 
 /**
@@ -213,4 +236,24 @@ function createCommentElement(comment) {
   commentElement.appendChild(text);
   commentElement.appendChild(deleteButton);
   return commentElement;
+}
+
+/**
+ * 
+ */
+function advancePage() {
+  if (!atEnd) {
+    pageNum = pageNum + 1;
+    getComments();
+  }
+}
+
+/**
+ * 
+ */
+function previousPage() {
+  if (!atBeginning) {
+    pageNum = pageNum - 1;
+    getComments();
+  }
 }

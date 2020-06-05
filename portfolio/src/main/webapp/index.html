@@ -65,7 +65,7 @@
       <div class="borderBox">
         <h2>TELL ME WHAT YOU THINK</h2>
         <label for="numComments">Display:</label>
-        <select name="numComments" id="numComments" onchange="getComments()">
+        <select name="numComments" id="numComments" onchange="changeNumComments()">
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="15">15</option>
@@ -85,6 +85,10 @@
           <button type="submit" class="button">Submit</button>
         </form>
         <article id="comment-space"></article>
+        <div class="pageButtonContainer">
+          <button type="submit" id="prevButton" class="unavailableButton" onclick="previousPage()">Prev</button>
+          <button type="submit" id="nextButton" class="availableButton" onclick="advancePage()">Next</button>
+        </div>
       </div>
     </section>
   </body>

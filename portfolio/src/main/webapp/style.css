@@ -1,11 +1,11 @@
 /* General styling */
 
 html {
-  scroll-behavior: smooth;
-  height: 100%;
-  width: 100%;
+  background-image: url('./images/background6.png');
   background-size: cover;
-  background-image: url('./images/background2.png');
+  height: 100%;
+  scroll-behavior: smooth;
+  width: 100%;
 }
 
 h1 {
@@ -17,10 +17,10 @@ h2 {
 }
 
 ul {
-  background-color: #e6ccff;
+  align-items: center;
+  background-color: #f2e6ff;
   display: flex;
   height: 60px;
-  align-items: center;
   margin: 0;
   overflow: hidden;
   padding: 0;
@@ -91,6 +91,31 @@ li a:hover {
   box-shadow: 1px 1px 1px grey;
 }
 
+.unavailableButton {
+  background-color: #f2e6ff;
+  border-radius: 10%;
+  display: inline-block;
+  font-family: 'Questrial', sans-serif;
+  font-size: 16px;
+  text-align: center;
+  width: 80px;
+  align-self: center;
+}
+
+.availableButton {
+  background-color: #e6ccff;
+  border-radius: 10%;
+  display: inline-block;
+  font-family: 'Questrial', sans-serif;
+  font-size: 16px;
+  text-align: center;
+  width: 80px;
+}
+
+.availableButton:hover {
+  box-shadow: 1px 1px 1px grey;
+}
+
 .title {
   font-weight: bold;
   margin-bottom: 20px;
@@ -115,6 +140,10 @@ li a:hover {
 
 .blogPost {
   display: none;
+}
+
+.pageButtonContainer {
+  text-align: center;
 }
 
 /* Gallery styling */
@@ -198,13 +227,13 @@ img.resizeSmall {
 
 /* Boxes and borders */
 .filledBox {
-  background: #e6ccff;
+  background: #f2e6ff;
   border-radius: 25px;
   padding: 20px;
 }
 
 .borderBox {
-  border: 4px solid #e6ccff;
+  border: 4px solid #f2e6ff;
   border-radius: 25px;
   background-color: white;
   padding: 20px;
