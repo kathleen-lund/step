@@ -2,6 +2,10 @@
 
 html {
   scroll-behavior: smooth;
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+  background-image: url('./images/background2.png');
 }
 
 h1 {
@@ -13,7 +17,7 @@ h2 {
 }
 
 ul {
-  background-color: #e6e6ff;
+  background-color: #e6ccff;
   display: flex;
   height: 60px;
   align-items: center;
@@ -81,6 +85,10 @@ li a:hover {
   height: 40px;
   margin-right: 10px;
   width: 40px;
+}
+
+.logoButton:hover {
+  box-shadow: 1px 1px 1px grey;
 }
 
 .title {
@@ -165,10 +173,12 @@ img.resizeSmall {
 }
 
 .comment {
+  background: #f1f1f1;
+  border-radius: 5px;
   display: flex;
   margin: 10px;
   padding: 10px;
-  width: 500px;
+  width: 550px;
 }
 
 .comment span {
@@ -182,15 +192,20 @@ img.resizeSmall {
   word-wrap: break-word;
 }
 
+.comment:hover {
+  box-shadow: 1px 1px 1px grey;
+}
+
 /* Boxes and borders */
 .filledBox {
-  background: #e6e6ff;
+  background: #e6ccff;
   border-radius: 25px;
   padding: 20px;
 }
 
 .borderBox {
-  border: 4px solid #e6e6ff;
+  border: 4px solid #e6ccff;
   border-radius: 25px;
+  background-color: white;
   padding: 20px;
 }
