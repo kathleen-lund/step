@@ -36,12 +36,12 @@ public class DataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the comment text
     String comment = getComment(request);
-    if (comment == null) {
+    if (comment == null || comment.equals("")) {
       return;
     }
     long timestamp = System.currentTimeMillis();
     String username = getUsername(request);
-    if (username == null) {
+    if (username == null || username.equals("")) {
       return;
     }
 

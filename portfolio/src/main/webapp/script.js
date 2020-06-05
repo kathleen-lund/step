@@ -215,10 +215,12 @@ function createCommentElement(comment) {
       minute.substr(-2) + label;
 
   // Span tag for the comment text
-  const text = document.createElement('span');
-  const html = ' ' + comment.text + '\n <i>' + formatted + '</i>';
-  // text.innerText = comment.text;
-  text.innerHTML = html;
+  const commentText = document.createElement('span');
+  // Make sure to escape comment input for HTML tags
+  let escapeDiv = document.createElement('div');
+  escapeDiv.innerText = comment.text;
+  const html = ' ' + escapeDiv.innerHTML + '\n <i>' + formatted + '</i>';
+  commentText.innerHTML = html;
 
   // Delete button for each comment
   const deleteButton = document.createElement('button');
@@ -235,7 +237,7 @@ function createCommentElement(comment) {
 
   // Append username, text, and delete button to overall element
   commentElement.appendChild(username);
-  commentElement.appendChild(text);
+  commentElement.appendChild(commentText);
   commentElement.appendChild(deleteButton);
   return commentElement;
 }
