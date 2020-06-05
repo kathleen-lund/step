@@ -37,11 +37,13 @@ public class DataServlet extends HttpServlet {
     // Get the comment text
     String comment = getComment(request);
     if (comment == null || comment.equals("")) {
+      response.sendRedirect("/index.html");
       return;
     }
     long timestamp = System.currentTimeMillis();
     String username = getUsername(request);
     if (username == null || username.equals("")) {
+      response.sendRedirect("/index.html");
       return;
     }
 
