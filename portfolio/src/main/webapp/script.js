@@ -217,7 +217,7 @@ function createCommentElement(comment) {
   // Span tag for the comment text
   const commentText = document.createElement('span');
   // Make sure to escape comment input for HTML tags
-  let escapeDiv = document.createElement('div');
+  const escapeDiv = document.createElement('div');
   escapeDiv.innerText = comment.text;
   const html = ' ' + escapeDiv.innerHTML + '\n <i>' + formatted + '</i>';
   commentText.innerHTML = html;
