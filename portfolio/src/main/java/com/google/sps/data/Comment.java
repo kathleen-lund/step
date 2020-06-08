@@ -20,11 +20,13 @@ public final class Comment {
   private final String text;
   private final long timestamp;
   private final String username;
+  private final String email;
 
-  public Comment(long id, String text, long timestamp, String username) {
+  public Comment(long id, String text, long timestamp, String username, String email) {
     this.id = id;
     this.text = text;
     this.timestamp = timestamp;
     this.username = username;
+    this.email = email;
   }
 }

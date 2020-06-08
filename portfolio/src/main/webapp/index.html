@@ -76,12 +76,12 @@
           <option value="newest">Newest First</option>
           <option value="oldest">Oldest First</option>
         </select>
-        <form onsubmit="submitComment()">
+        <p id="accountMessage"></p>
+        <form onsubmit="submitComment()" id="commentForm" class="commentForm">
+          <span id="greetUser"></span>
           <p>Submit a comment:</p>
           <span>Comment:</span>
           <input type="text" name="user-comment" id="userComment" class="inputBox" />
-          <span>Name:</span>
-          <input type="text" name="user-name" id="userName" class="inputBox" />
           <button type="submit" class="button">Submit</button>
         </form>
         <article id="comment-space"></article>

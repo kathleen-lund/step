@@ -11,14 +11,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+ 
 /* Global variables to support comment pagination */
 let pageNum = 0;
 let numComments = 5;
 let pageCursor = null;
 let cursorList = [null];
 let order = 'newest';
-
+let email = "";
+let username = "";
+ 
 /**
  * Adds a random fact to the page.
  */
@@ -29,15 +31,15 @@ function addRandomFact() {
     'I\'m horrible at remembering song lyrics.',
     'I speak some French.',
   ];
-
+ 
   // Pick a random fact.
   const fact = facts[Math.floor(Math.random() * facts.length)];
-
+ 
   // Add it to the page.
   const factContainer = document.getElementById('fact-container');
   factContainer.innerText = fact;
 }
-
+ 
 /**
  * Shows the specified blog post to the user
  * @param {number} postNum The number of which
@@ -54,18 +56,18 @@ function showBlogPost(postNum) {
       hideBlogPost(postNum);
     };
   }
-
+ 
   // Show blog post content in the correct area.
   const blogPostId = 'blogPost' + postNum;
   const postArea = document.getElementById(blogPostId);
   if (postArea !== null) {
     postArea.style.display = 'block';
   }
-
+ 
   // Automatically scroll window with post now opened.
   window.scrollBy(0, 500);
 }
-
+ 
 /**
  * Hides the specified blog post from the user
  * @param {number} postNum The number of which
@@ -82,7 +84,7 @@ function hideBlogPost(postNum) {
       showBlogPost(postNum);
     };
   }
-
+ 
   // Hide blog post content from its area.
   const blogPostId = 'blogPost' + postNum;
   const postArea = document.getElementById(blogPostId);
@@ -90,7 +92,7 @@ function hideBlogPost(postNum) {
     postArea.style.display = 'none';
   }
 }
-
+ 
 /**
  * Gets the comments using the GetCommentsServlet
  * and adds them to the site interface. Supports
@@ -101,11 +103,12 @@ async function getComments() {
   if (pageNum >= 0 && pageNum < cursorList.length) {
     pageCursor = cursorList[pageNum];
   }
-
+ 
   // Fetch comments from servlet
   const responsePath = '/get-comments?order=' + order +
       '&pageCursor=' + pageCursor + '&num=' + numComments;
   const response = await fetch(responsePath);
+<<<<<<< HEAD
   const resp = await response.json();
 
   const commentArea = document.getElementById('comment-space');
@@ -114,7 +117,24 @@ async function getComments() {
       // Just went to a page not seen before: add its
       // cursor to the end of the array
       cursorList.push(resp.nextPageCursor);
+    }	    
+=======
+  const login = await fetch('/login-status');
+  const loginInfo = await login.json();
+  document.getElementById('accountMessage').innerHTML = loginInfo.message;
+  if (loginInfo.message.includes("Logout")) {
+    // User is logged in
+    document.getElementById('commentForm').style.display = 'block';
+    email = loginInfo.email;
+    username = loginInfo.username;
+    if (username === null) {
+       window.open("/username.html", '_self', false); 
     }
+    else {
+      document.getElementById('greetUser').innerText = "Hello, " + username + "!";
+    }
+  }
+ 
     pageCursor = cursorList[pageNum];
 
     // Retrieve and parse comments JSON from get-comments response
@@ -125,7 +145,6 @@ async function getComments() {
       pageNum = pageNum - 1;
       return;
     }
-
     // Clear comment area in case page is being reloaded
     commentArea.innerHTML = '';
 
@@ -137,7 +156,14 @@ async function getComments() {
     }
   }
 }
-
+ 
+async function submitComment() {
+  // Fetch comments from servlet
+  const comment = document.getElementById('userComment').value;
+  const responsePath = '/data?email=' + email + '&text=' + comment + '&username=' + username;
+  const response = await fetch(responsePath);
+}
+ 
 /**
  * Retrieve the number of comments to display from the
  * drop-down menu, and re-load comments.
@@ -183,7 +209,7 @@ function changeCommentOrder() {
   pageCursor = null;
   getComments();
 }
-
+ 
 /**
  * Retrieve the comment order to display from the
  * drop-down menu.
@@ -198,7 +224,7 @@ function getCommentOrder() {
   }
   return null;
 }
-
+ 
 /**
  * Submit a comment using form fields using the
  * DataServlet, and reload comments.
@@ -265,7 +291,7 @@ function previousPage() {
   pageNum = pageNum - 1 >= 0 ? pageNum - 1 : 0;
   getComments();
 }
-
+ 
 /**
  * Creates an element for a comment, including its delete button.
  */
@@ -273,12 +299,12 @@ function createCommentElement(comment) {
   // Article tag to encapsulate comment elements
   const commentElement = document.createElement('article');
   commentElement.className = 'comment';
-
+ 
   // Bold tag for the username
   const username = document.createElement('b');
   const usernameStr = comment.username + ':';
   username.innerText = usernameStr;
-
+ 
   // Timestamp
   const date = new Date(comment.timestamp);
   const formatted = toAmPmTimestamp(date);
@@ -290,23 +316,28 @@ function createCommentElement(comment) {
   escapeDiv.innerText = comment.text;
   const html = ' ' + escapeDiv.innerHTML + '\n <i>' + formatted + '</i>';
   commentText.innerHTML = html;
-
-  // Delete button for each comment
-  const deleteButton = document.createElement('button');
-  deleteButton.innerText = 'Delete';
-  deleteButton.className = 'buttonSmall';
-  deleteButton.addEventListener('click', () => {
-    // Delete function to remove this comment from Datastore
-    deleteComment(comment);
-
-    // Remove the comment from the DOM
-    commentElement.remove();
-  });
-
-
+ 
   // Append username, text, and delete button to overall element
   commentElement.appendChild(username);
   commentElement.appendChild(commentText);
-  commentElement.appendChild(deleteButton);
+
+  // Delete button for the comment if it's your own
+  console.log(email);
+  console.log(comment.email);
+  if (email === comment.email) {
+    const deleteButton = document.createElement('button');
+    deleteButton.innerText = 'Delete';
+    deleteButton.className = 'buttonSmall';
+    deleteButton.addEventListener('click', () => {
+      // Delete function to remove this comment from Datastore
+      deleteComment(comment);
+ 
+      // Remove the comment from the DOM
+      commentElement.remove();
+    });
+    commentElement.appendChild(deleteButton);
+  }
+  
   return commentElement;
 }
+ 
