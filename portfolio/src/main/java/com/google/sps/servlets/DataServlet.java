@@ -33,15 +33,15 @@ public class DataServlet extends HttpServlet {
   static final String USERNAME_ID = "user-name";
 
   @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get the comment text
-    String comment = getComment(request);
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Get the comment text, timestamp, and user name
+    String comment = request.getParameter("text");
     if (comment == null || comment.equals("")) {
       response.sendRedirect("/index.html");
       return;
     }
     long timestamp = System.currentTimeMillis();
-    String username = getUsername(request);
+    String username = request.getParameter("name");
     if (username == null || username.equals("")) {
       response.sendRedirect("/index.html");
       return;
@@ -59,21 +59,5 @@ public class DataServlet extends HttpServlet {
 
     // Redirect back to the HTML page.
     response.sendRedirect("/index.html");
-  }
-
-  /**
-   * Returns the comment entered by the user.
-   */
-  private String getComment(HttpServletRequest request) {
-    // Get the input from the form.
-    return request.getParameter(COMMENT_INPUT_ID);
-  }
-
-  /**
-   * Returns the name entered by the user.
-   */
-  private String getUsername(HttpServletRequest request) {
-    // Get the input from the form.
-    return request.getParameter(USERNAME_ID);
   }
 }

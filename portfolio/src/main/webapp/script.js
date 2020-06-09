@@ -15,8 +15,9 @@
 /* Global variables to support comment pagination */
 let pageNum = 0;
 let numComments = 5;
-let atBeginning = true;
-let atEnd = false;
+let pageCursor = null;
+let cursorList = [null];
+let order = 'newest';
 
 /**
  * Adds a random fact to the page.
@@ -96,43 +97,40 @@ function hideBlogPost(postNum) {
  * pagination between to see all comments.
  */
 async function getComments() {
-  let commentOrder = getCommentOrder();
-  if (commentOrder == null) {
-    // If could not find comment order, default to newest first
-    commentOrder = 'newest';
+  // Reset pageCursor to the one for this page before fetching
+  if (pageNum >= 0 && pageNum < cursorList.length) {
+    pageCursor = cursorList[pageNum];
   }
 
   // Fetch comments from servlet
-  const responsePath = '/get-comments?order=' + commentOrder;
+  const responsePath = '/get-comments?order=' + order +
+      '&pageCursor=' + pageCursor + '&num=' + numComments;
   const response = await fetch(responsePath);
-  const comments = await response.json();
+  const resp = await response.json();
 
   const commentArea = document.getElementById('comment-space');
-  if (commentArea !== null && comments !== null) {
+  if (commentArea !== null && resp.comments !== null) {
+    if (pageNum >= (cursorList.length - 1)) {
+      // Just went to a page not seen before: add its
+      // cursor to the end of the array
+      cursorList.push(resp.nextPageCursor);
+    }
+    pageCursor = cursorList[pageNum];
+
+    // Retrieve and parse comments JSON from get-comments response
+    let comments = resp.comments;
+    comments = JSON.parse(comments);
+    if (comments.length === 0 || comments === '') {
+      // At the end: no more comments
+      pageNum = pageNum - 1;
+      return;
+    }
+
     // Clear comment area in case page is being reloaded
     commentArea.innerHTML = '';
 
-    // Calculate which comments to start and end at
-    const start = pageNum * numComments;
-    const end = (start + numComments) >= comments.length ? comments.length :
-                                                           start + numComments;
-    // Update globals and button appearances
-    if (start === 0) {
-      atBeginning = true;
-      document.getElementById('prevButton').className = 'unavailableButton';
-    } else {
-      atBeginning = false;
-      document.getElementById('prevButton').className = 'availableButton';
-    }
-    if (end === comments.length) {
-      atEnd = true;
-      document.getElementById('nextButton').className = 'unavailableButton';
-    } else {
-      atEnd = false;
-      document.getElementById('nextButton').className = 'availableButton';
-    }
-
-    for (let i = start; i < end; i++) {
+    // Append current comments to page
+    for (let i = 0; i < comments.length; i++) {
       const comment = comments[i];
       const commentElement = createCommentElement(comment);
       commentArea.appendChild(commentElement);
@@ -145,10 +143,7 @@ async function getComments() {
  * drop-down menu, and re-load comments.
  */
 function changeNumComments() {
-  // Start the page back at 0
-  pageNum = 0;
-
-  // Get the newly selected number from the dropdown
+  // Get the newly selected number from the drop-down
   const num = document.getElementById('numComments');
   if (num !== null) {
     numComments = num.options[num.selectedIndex].text;
@@ -162,6 +157,30 @@ function changeNumComments() {
     // Default to show 5 comments
     numComments = 5;
   }
+
+  // Reset page back to beginning
+  cursorList = [null];
+  pageNum = 0;
+  pageCursor = null;
+  getComments();
+}
+
+/**
+ * Retrieve the order of comments to display from the
+ * drop-down menu, and re-load comments.
+ */
+function changeCommentOrder() {
+  // Get the newly selected order from the drop-down
+  order = getCommentOrder();
+  if (order == null) {
+    // If could not find comment order, default to newest first
+    order = 'newest';
+  }
+
+  // Reset page back to beginning
+  cursorList = [null];
+  pageNum = 0;
+  pageCursor = null;
   getComments();
 }
 
@@ -181,6 +200,23 @@ function getCommentOrder() {
 }
 
 /**
+ * Submit a comment using form fields using the
+ * DataServlet, and reload comments.
+ */
+async function submitComment() {
+  const text = document.getElementById('userComment').value;
+  const name = document.getElementById('userName').value;
+  const responsePath = '/data?text=' + text + '&name=' + name;
+  fetch(responsePath);
+
+  // Reset page back to beginning
+  cursorList = [null];
+  pageNum = 0;
+  pageCursor = null;
+  getComments();
+}
+
+/**
  * Delete a comment using its id and the
  * DeleteCommentServlet.
  */
@@ -188,6 +224,46 @@ async function deleteComment(comment) {
   const params = new URLSearchParams();
   params.append('id', comment.id);
   fetch('/delete-comment', {method: 'POST', body: params});
+
+  // Reset page back to beginning
+  cursorList = [null];
+  pageNum = 0;
+  pageCursor = null;
+  getComments();
+}
+
+/**
+ * Convert a Javascript Date to the AM/PM
+ * format desired.
+ * @return {String} the Date formatted in
+ * MM/DD/YYYY, Hr:Min am/pm
+ */
+function toAmPmTimestamp(date) {
+  const hour = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+  const minute = '0' + date.getMinutes();
+  const label = date.getHours() > 12 ? 'pm' : 'am';
+  let formatted = date.toLocaleDateString();
+  formatted = formatted + ', ' + hour + ':' + minute.substr(-2) + label;
+  return formatted;
+}
+
+/**
+ * Moves to next page and gets/displays
+ * comments for the new page.
+ */
+function advancePage() {
+  pageNum = pageNum + 1;
+  getComments();
+}
+
+/**
+ * Moves to the previous page if not currently at
+ * the beginning of pages, and gets/displays
+ * comments for the new page.
+ */
+function previousPage() {
+  pageNum = pageNum - 1 >= 0 ? pageNum - 1 : 0;
+  getComments();
 }
 
 /**
@@ -205,14 +281,7 @@ function createCommentElement(comment) {
 
   // Timestamp
   const date = new Date(comment.timestamp);
-  const month = date.getMonth() + 1;
-  const day = date.getDay();
-  const year = date.getFullYear();
-  const hour = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-  const minute = '0' + date.getMinutes();
-  const label = date.getHours() > 12 ? 'pm' : 'am';
-  const formatted = month + '/' + day + '/' + year + ', ' + hour + ':' +
-      minute.substr(-2) + label;
+  const formatted = toAmPmTimestamp(date);
 
   // Span tag for the comment text
   const commentText = document.createElement('span');
@@ -240,49 +309,4 @@ function createCommentElement(comment) {
   commentElement.appendChild(commentText);
   commentElement.appendChild(deleteButton);
   return commentElement;
-}
-
-/**
- * Moves to next page if not currently at the end of
- * pages, and gets/displays comments for the new page.
- */
-function advancePage() {
-  if (!atEnd) {
-    pageNum = pageNum + 1;
-    getComments();
-  }
-}
-
-/**
- * Moves to the previous page if not currently at
- * the beginning of pages, and gets/displays
- * comments for the new page.
- */
-function previousPage() {
-  if (!atBeginning) {
-    pageNum = pageNum - 1;
-    getComments();
-  }
-}
-
-/**
- * Retrieve the number of comments to display from the
- * drop-down menu.
- * @return {number} the number of comments requested,
- * or -1 if it could not be found.
- */
-function getNumComments() {
-  // Get the selected number from the dropdown
-  const num = document.getElementById('numComments');
-  if (num !== null) {
-    let numComments = num.options[num.selectedIndex].text;
-
-    // Parse String to int to return
-    numComments = parseInt(numComments);
-    if (!isNaN(numComments)) {
-      return numComments;
-    }
-    return -1;
-  }
-  return -1;
 }

@@ -95,17 +95,7 @@ li a:hover {
   box-shadow: 1px 1px 1px grey;
 }
 
-.unavailableButton {
-  background-color: #f2e6ff;
-  border-radius: 10%;
-  display: inline-block;
-  font-family: 'Questrial', sans-serif;
-  font-size: 16px;
-  text-align: center;
-  width: 80px;
-}
-
-.availableButton {
+.pagerButton {
   background-color: #e6ccff;
   border-radius: 10%;
   display: inline-block;
@@ -115,7 +105,7 @@ li a:hover {
   width: 80px;
 }
 
-.availableButton:hover {
+.pagerButton:hover {
   box-shadow: 1px 1px 1px grey;
 }
 

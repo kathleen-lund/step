@@ -72,22 +72,22 @@
           <option value="20">20</option>
         </select>
         <label for="commentOrder">Sort By:</label>
-        <select name="commentOrder" id="commentOrder" onchange="getComments()">
+        <select name="commentOrder" id="commentOrder" onchange="changeCommentOrder()">
           <option value="newest">Newest First</option>
           <option value="oldest">Oldest First</option>
         </select>
-        <form action="/data" method="post">
+        <form onsubmit="submitComment()">
           <p>Submit a comment:</p>
           <span>Comment:</span>
-          <input type="text" name="user-comment" class="inputBox" />
+          <input type="text" name="user-comment" id="userComment" class="inputBox" />
           <span>Name:</span>
-          <input type="text" name="user-name" class="inputBox" />
+          <input type="text" name="user-name" id="userName" class="inputBox" />
           <button type="submit" class="button">Submit</button>
         </form>
         <article id="comment-space"></article>
         <div class="pageButtonContainer">
-          <button type="submit" id="prevButton" class="unavailableButton" onclick="previousPage()">Prev</button>
-          <button type="submit" id="nextButton" class="availableButton" onclick="advancePage()">Next</button>
+          <button type="submit" id="prevButton" class="pagerButton" onclick="previousPage()">Prev</button>
+          <button type="submit" id="nextButton" class="pagerButton" onclick="advancePage()">Next</button>
         </div>
       </div>
     </section>
