@@ -11,16 +11,24 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
- 
+
 /* Global variables to support comment pagination */
 let pageNum = 0;
 let numComments = 5;
+<<<<<<< HEAD
 let pageCursor = null;
 let cursorList = [null];
 let order = 'newest';
 let email = "";
 let username = "";
  
+=======
+let atBeginning = true;
+let atEnd = false;
+let email = '';
+let username = '';
+
+>>>>>>> f45d289... Fix validator issues
 /**
  * Adds a random fact to the page.
  */
@@ -31,15 +39,15 @@ function addRandomFact() {
     'I\'m horrible at remembering song lyrics.',
     'I speak some French.',
   ];
- 
+
   // Pick a random fact.
   const fact = facts[Math.floor(Math.random() * facts.length)];
- 
+
   // Add it to the page.
   const factContainer = document.getElementById('fact-container');
   factContainer.innerText = fact;
 }
- 
+
 /**
  * Shows the specified blog post to the user
  * @param {number} postNum The number of which
@@ -56,18 +64,18 @@ function showBlogPost(postNum) {
       hideBlogPost(postNum);
     };
   }
- 
+
   // Show blog post content in the correct area.
   const blogPostId = 'blogPost' + postNum;
   const postArea = document.getElementById(blogPostId);
   if (postArea !== null) {
     postArea.style.display = 'block';
   }
- 
+
   // Automatically scroll window with post now opened.
   window.scrollBy(0, 500);
 }
- 
+
 /**
  * Hides the specified blog post from the user
  * @param {number} postNum The number of which
@@ -84,7 +92,7 @@ function hideBlogPost(postNum) {
       showBlogPost(postNum);
     };
   }
- 
+
   // Hide blog post content from its area.
   const blogPostId = 'blogPost' + postNum;
   const postArea = document.getElementById(blogPostId);
@@ -92,7 +100,7 @@ function hideBlogPost(postNum) {
     postArea.style.display = 'none';
   }
 }
- 
+
 /**
  * Gets the comments using the GetCommentsServlet
  * and adds them to the site interface. Supports
@@ -103,11 +111,12 @@ async function getComments() {
   if (pageNum >= 0 && pageNum < cursorList.length) {
     pageCursor = cursorList[pageNum];
   }
- 
+
   // Fetch comments from servlet
   const responsePath = '/get-comments?order=' + order +
       '&pageCursor=' + pageCursor + '&num=' + numComments;
   const response = await fetch(responsePath);
+<<<<<<< HEAD
 <<<<<<< HEAD
   const resp = await response.json();
 
@@ -119,21 +128,26 @@ async function getComments() {
       cursorList.push(resp.nextPageCursor);
     }	    
 =======
+=======
+  const comments = await response.json();
+
+>>>>>>> f45d289... Fix validator issues
   const login = await fetch('/login-status');
   const loginInfo = await login.json();
   document.getElementById('accountMessage').innerHTML = loginInfo.message;
-  if (loginInfo.message.includes("Logout")) {
+  if (loginInfo.message.includes('Logout')) {
     // User is logged in
     document.getElementById('commentForm').style.display = 'block';
     email = loginInfo.email;
     username = loginInfo.username;
     if (username === null) {
-       window.open("/username.html", '_self', false); 
-    }
-    else {
-      document.getElementById('greetUser').innerText = "Hello, " + username + "!";
+      window.open('/username.html', '_self', false);
+    } else {
+      document.getElementById('greetUser').innerText =
+          'Hello, ' + username + '!';
     }
   }
+<<<<<<< HEAD
  
     pageCursor = cursorList[pageNum];
 
@@ -150,26 +164,63 @@ async function getComments() {
 
     // Append current comments to page
     for (let i = 0; i < comments.length; i++) {
+=======
+
+  const commentArea = document.getElementById('comment-space');
+  if (commentArea !== null && comments !== null) {
+    // Clear comment area in case page is being reloaded
+    commentArea.innerHTML = '';
+
+    // Calculate which comments to start and end at
+    const start = pageNum * numComments;
+    const end = (start + numComments) >= comments.length ? comments.length :
+                                                           start + numComments;
+    // Update globals and button appearances
+    if (start === 0) {
+      atBeginning = true;
+      document.getElementById('prevButton').className = 'unavailableButton';
+    } else {
+      atBeginning = false;
+      document.getElementById('prevButton').className = 'availableButton';
+    }
+    if (end === comments.length) {
+      atEnd = true;
+      document.getElementById('nextButton').className = 'unavailableButton';
+    } else {
+      atEnd = false;
+      document.getElementById('nextButton').className = 'availableButton';
+    }
+
+    for (let i = start; i < end; i++) {
+>>>>>>> f45d289... Fix validator issues
       const comment = comments[i];
       const commentElement = createCommentElement(comment);
       commentArea.appendChild(commentElement);
     }
   }
 }
- 
+
 async function submitComment() {
   // Fetch comments from servlet
   const comment = document.getElementById('userComment').value;
-  const responsePath = '/data?email=' + email + '&text=' + comment + '&username=' + username;
+  const responsePath =
+      '/data?email=' + email + '&text=' + comment + '&username=' + username;
   const response = await fetch(responsePath);
 }
- 
+
 /**
  * Retrieve the number of comments to display from the
  * drop-down menu, and re-load comments.
  */
 function changeNumComments() {
+<<<<<<< HEAD
   // Get the newly selected number from the drop-down
+=======
+  // Start the page back at 0
+  pageNum = 0;
+
+  // Get the newly selected number from the dropdown
+>>>>>>> f45d289... Fix validator issues
   const num = document.getElementById('numComments');
   if (num !== null) {
     numComments = num.options[num.selectedIndex].text;
@@ -209,7 +260,7 @@ function changeCommentOrder() {
   pageCursor = null;
   getComments();
 }
- 
+
 /**
  * Retrieve the comment order to display from the
  * drop-down menu.
@@ -224,7 +275,7 @@ function getCommentOrder() {
   }
   return null;
 }
- 
+
 /**
  * Submit a comment using form fields using the
  * DataServlet, and reload comments.
@@ -291,7 +342,7 @@ function previousPage() {
   pageNum = pageNum - 1 >= 0 ? pageNum - 1 : 0;
   getComments();
 }
- 
+
 /**
  * Creates an element for a comment, including its delete button.
  */
@@ -299,15 +350,26 @@ function createCommentElement(comment) {
   // Article tag to encapsulate comment elements
   const commentElement = document.createElement('article');
   commentElement.className = 'comment';
- 
+
   // Bold tag for the username
   const username = document.createElement('b');
   const usernameStr = comment.username + ':';
   username.innerText = usernameStr;
- 
+
   // Timestamp
   const date = new Date(comment.timestamp);
+<<<<<<< HEAD
   const formatted = toAmPmTimestamp(date);
+=======
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const year = date.getFullYear();
+  const hour = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+  const minute = '0' + date.getMinutes();
+  const label = date.getHours() > 12 ? 'pm' : 'am';
+  const formatted = month + '/' + day + '/' + year + ', ' + hour + ':' +
+      minute.substr(-2) + label;
+>>>>>>> f45d289... Fix validator issues
 
   // Span tag for the comment text
   const commentText = document.createElement('span');
@@ -316,7 +378,7 @@ function createCommentElement(comment) {
   escapeDiv.innerText = comment.text;
   const html = ' ' + escapeDiv.innerHTML + '\n <i>' + formatted + '</i>';
   commentText.innerHTML = html;
- 
+
   // Append username, text, and delete button to overall element
   commentElement.appendChild(username);
   commentElement.appendChild(commentText);
@@ -331,13 +393,61 @@ function createCommentElement(comment) {
     deleteButton.addEventListener('click', () => {
       // Delete function to remove this comment from Datastore
       deleteComment(comment);
- 
+
       // Remove the comment from the DOM
       commentElement.remove();
     });
     commentElement.appendChild(deleteButton);
   }
-  
+
   return commentElement;
 }
+<<<<<<< HEAD
  
+=======
+
+/**
+ * Moves to next page if not currently at the end of
+ * pages, and gets/displays comments for the new page.
+ */
+function advancePage() {
+  if (!atEnd) {
+    pageNum = pageNum + 1;
+    getComments();
+  }
+}
+
+/**
+ * Moves to the previous page if not currently at
+ * the beginning of pages, and gets/displays
+ * comments for the new page.
+ */
+function previousPage() {
+  if (!atBeginning) {
+    pageNum = pageNum - 1;
+    getComments();
+  }
+}
+
+/**
+ * Retrieve the number of comments to display from the
+ * drop-down menu.
+ * @return {number} the number of comments requested,
+ * or -1 if it could not be found.
+ */
+function getNumComments() {
+  // Get the selected number from the dropdown
+  const num = document.getElementById('numComments');
+  if (num !== null) {
+    let numComments = num.options[num.selectedIndex].text;
+
+    // Parse String to int to return
+    numComments = parseInt(numComments);
+    if (!isNaN(numComments)) {
+      return numComments;
+    }
+    return -1;
+  }
+  return -1;
+}
+>>>>>>> f45d289... Fix validator issues

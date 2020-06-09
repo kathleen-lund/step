@@ -11,9 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
- 
+
 package com.google.sps.servlets;
- 
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -25,13 +25,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
- 
+
 /** Servlet that returns some example content. */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   static final String COMMENT_INPUT_ID = "user-comment";
   static final String USERNAME_ID = "user-name";
- 
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the comment text, timestamp, and user name
@@ -41,6 +41,14 @@ public class DataServlet extends HttpServlet {
       return;
     }
     long timestamp = System.currentTimeMillis();
+<<<<<<< HEAD
+=======
+    // String username = getUsername(request);
+    // if (username == null || username.equals("")) {
+    // response.sendRedirect("/index.html");
+    // return;
+    //}
+>>>>>>> f45d289... Fix validator issues
 
     // Create entity and load with data
     Entity commentEntity = new Entity("Comment");
@@ -50,15 +58,15 @@ public class DataServlet extends HttpServlet {
     commentEntity.setProperty("email", email);
     String username = request.getParameter("username");
     commentEntity.setProperty("username", username);
- 
+
     // Put entity into Datastore
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
- 
+
     // Redirect back to the HTML page.
     response.sendRedirect("/index.html");
   }
- 
+
   /**
    * Returns the comment entered by the user.
    */
@@ -66,7 +74,7 @@ public class DataServlet extends HttpServlet {
     // Get the input from the form.
     return request.getParameter(COMMENT_INPUT_ID);
   }
- 
+
   /**
    * Returns the name entered by the user.
    */
