@@ -264,3 +264,71 @@ function previousPage() {
     getComments();
   }
 }
+
+/**
+ * Retrieve the number of comments to display from the
+ * drop-down menu.
+ * @return {number} the number of comments requested,
+ * or -1 if it could not be found.
+ */
+function getNumComments() {
+  // Get the selected number from the dropdown
+  const num = document.getElementById('numComments');
+  if (num !== null) {
+    let numComments = num.options[num.selectedIndex].text;
+
+    // Parse String to int to return
+    numComments = parseInt(numComments);
+    if (!isNaN(numComments)) {
+      return numComments;
+    }
+    return -1;
+  }
+  return -1;
+}
+
+/**
+ * Delete a comment using its id and the
+ * DeleteCommentServlet.
+ */
+async function deleteComment(comment) {
+  const params = new URLSearchParams();
+  params.append('id', comment.id);
+  fetch('/delete-comment', {method: 'POST', body: params});
+}
+
+/**
+ * Creates an element for a comment, including its delete button.
+ */
+function createCommentElement(comment) {
+  // Article tag to encapsulate comment elements
+  const commentElement = document.createElement('article');
+  commentElement.className = 'comment';
+
+  // Bold tag for the username
+  const username = document.createElement('b');
+  const usernameStr = comment.username + ':';
+  username.innerText = usernameStr;
+
+  // Span tag for the comment text
+  const text = document.createElement('span');
+  text.innerText = comment.text;
+
+  // Delete button for each comment
+  const deleteButton = document.createElement('button');
+  deleteButton.innerText = 'Delete';
+  deleteButton.className = 'buttonSmall';
+  deleteButton.addEventListener('click', () => {
+    // Delete function to remove this comment from Datastore
+    deleteComment(comment);
+
+    // Remove the comment from the DOM
+    commentElement.remove();
+  });
+
+  // Append username, text, and delete button to overall element
+  commentElement.appendChild(username);
+  commentElement.appendChild(text);
+  commentElement.appendChild(deleteButton);
+  return commentElement;
+}
