@@ -33,19 +33,21 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the comment text, timestamp, and user name
     String comment = request.getParameter("text");
-    if (comment == null || comment.equals("")) {
+    long timestamp = System.currentTimeMillis();
+    String email = request.getParameter("email");
+    String username = request.getParameter("username");
+    if (comment == null || comment.equals("") || email == null || email.equals("")
+        || username == null || username.equals("")) {
+      // One of the necessary parameters was not set: redirect
       response.sendRedirect("/index.html");
       return;
     }
-    long timestamp = System.currentTimeMillis();
 
     // Create entity and load with data
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("text", comment);
     commentEntity.setProperty("timestamp", timestamp);
-    String email = request.getParameter("email");
     commentEntity.setProperty("email", email);
-    String username = request.getParameter("username");
     commentEntity.setProperty("username", username);
 
     // Put entity into Datastore
