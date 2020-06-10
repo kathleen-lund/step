@@ -42,6 +42,7 @@ public class ChooseUsernameServlet extends HttpServlet {
     String id = userService.getCurrentUser().getUserId();
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    // Make a UserInfo Entity with retrieved ID and username
     Entity entity = new Entity("UserInfo", id);
     entity.setProperty("id", id);
     entity.setProperty("username", username);

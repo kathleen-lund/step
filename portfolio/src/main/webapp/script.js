@@ -18,8 +18,8 @@ let numComments = 5;
 let pageCursor = null;
 let cursorList = [null];
 let order = 'newest';
-let email = "";
-let username = "";
+let email = '';
+let username = '';
 
 /**
  * Adds a random fact to the page.
@@ -155,14 +155,6 @@ async function getComments() {
   }
 }
 
-async function submitComment() {
-  // Fetch comments from servlet
-  const comment = document.getElementById('userComment').value;
-  const responsePath =
-      '/data?email=' + email + '&text=' + comment + '&username=' + username;
-  const response = await fetch(responsePath);
-}
-
 /**
  * Retrieve the number of comments to display from the
  * drop-down menu, and re-load comments.
@@ -229,10 +221,11 @@ function getCommentOrder() {
  * DataServlet, and reload comments.
  */
 async function submitComment() {
-  const text = document.getElementById('userComment').value;
-  const name = document.getElementById('userName').value;
-  const responsePath = '/data?text=' + text + '&name=' + name;
-  fetch(responsePath);
+  // Fetch comments from servlet
+  const comment = document.getElementById('userComment').value;
+  const responsePath =
+      '/data?email=' + email + '&text=' + comment + '&username=' + username;
+  const response = await fetch(responsePath);
 
   // Reset page back to beginning
   cursorList = [null];
@@ -326,7 +319,7 @@ function createCommentElement(comment) {
   if (email === comment.email) {
     const deleteButton = document.createElement('button');
     deleteButton.innerText = 'Delete';
-    deleteButton.className = 'buttonSmall';
+    deleteButton.className = 'button-small';
     deleteButton.addEventListener('click', () => {
       // Delete function to remove this comment from Datastore
       deleteComment(comment);
