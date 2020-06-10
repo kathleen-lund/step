@@ -34,25 +34,23 @@ public class LoginStatusServlet extends HttpServlet {
     PrintWriter out = response.getWriter();
     UserService userService = UserServiceFactory.getUserService();
 
-    // If user is not logged in, show a login form (could also redirect to a login page)
+    // If user is not logged in, return a message with a link to login
     if (!userService.isUserLoggedIn()) {
       String loginUrl = userService.createLoginURL("/index.html");
       String message = "<p>Login <a href=\"" + loginUrl + "\">here</a> to post a comment.</p>";
       JsonObject json = new JsonObject();
       json.addProperty("message", message);
       out.println(json.toString());
-      // out.println("<p>Login <a href=\"" + loginUrl + "\">here</a> to post a comment.</p>");
       return;
     }
 
-    // If user has not set a nickname, redirect to nickname page
+    // User should have set a username at this point
     String username = getUserUsername(userService.getCurrentUser().getUserId());
     if (username == null) {
-      System.out.println("there may be an issue");
+      System.out.println("User did not set a username");
     }
 
-    // User is logged in and has a nickname, so the request can proceed
-
+    // Build logout message to display to logged-in user
     String logoutUrl = userService.createLogoutURL("/index.html");
     String message = "<p>Logout <a href=\"" + logoutUrl + "\">here</a>.</p>";
     message += "<p>Change your username <a href=\"/username.html\">here</a>.</p>";
