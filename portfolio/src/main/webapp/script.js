@@ -15,20 +15,12 @@
 /* Global variables to support comment pagination */
 let pageNum = 0;
 let numComments = 5;
-<<<<<<< HEAD
 let pageCursor = null;
 let cursorList = [null];
 let order = 'newest';
 let email = "";
 let username = "";
- 
-=======
-let atBeginning = true;
-let atEnd = false;
-let email = '';
-let username = '';
 
->>>>>>> f45d289... Fix validator issues
 /**
  * Adds a random fact to the page.
  */
@@ -107,31 +99,6 @@ function hideBlogPost(postNum) {
  * pagination between to see all comments.
  */
 async function getComments() {
-  // Reset pageCursor to the one for this page before fetching
-  if (pageNum >= 0 && pageNum < cursorList.length) {
-    pageCursor = cursorList[pageNum];
-  }
-
-  // Fetch comments from servlet
-  const responsePath = '/get-comments?order=' + order +
-      '&pageCursor=' + pageCursor + '&num=' + numComments;
-  const response = await fetch(responsePath);
-<<<<<<< HEAD
-<<<<<<< HEAD
-  const resp = await response.json();
-
-  const commentArea = document.getElementById('comment-space');
-  if (commentArea !== null && resp.comments !== null) {
-    if (pageNum >= (cursorList.length - 1)) {
-      // Just went to a page not seen before: add its
-      // cursor to the end of the array
-      cursorList.push(resp.nextPageCursor);
-    }	    
-=======
-=======
-  const comments = await response.json();
-
->>>>>>> f45d289... Fix validator issues
   const login = await fetch('/login-status');
   const loginInfo = await login.json();
   document.getElementById('accountMessage').innerHTML = loginInfo.message;
@@ -147,8 +114,25 @@ async function getComments() {
           'Hello, ' + username + '!';
     }
   }
-<<<<<<< HEAD
- 
+
+  // Reset pageCursor to the one for this page before fetching
+  if (pageNum >= 0 && pageNum < cursorList.length) {
+    pageCursor = cursorList[pageNum];
+  }
+
+  // Fetch comments from servlet
+  const responsePath = '/get-comments?order=' + order +
+      '&pageCursor=' + pageCursor + '&num=' + numComments;
+  const response = await fetch(responsePath);
+  const resp = await response.json();
+
+  const commentArea = document.getElementById('comment-space');
+  if (commentArea !== null && resp.comments !== null) {
+    if (pageNum >= (cursorList.length - 1)) {
+      // Just went to a page not seen before: add its
+      // cursor to the end of the array
+      cursorList.push(resp.nextPageCursor);
+    }
     pageCursor = cursorList[pageNum];
 
     // Retrieve and parse comments JSON from get-comments response
@@ -164,35 +148,6 @@ async function getComments() {
 
     // Append current comments to page
     for (let i = 0; i < comments.length; i++) {
-=======
-
-  const commentArea = document.getElementById('comment-space');
-  if (commentArea !== null && comments !== null) {
-    // Clear comment area in case page is being reloaded
-    commentArea.innerHTML = '';
-
-    // Calculate which comments to start and end at
-    const start = pageNum * numComments;
-    const end = (start + numComments) >= comments.length ? comments.length :
-                                                           start + numComments;
-    // Update globals and button appearances
-    if (start === 0) {
-      atBeginning = true;
-      document.getElementById('prevButton').className = 'unavailableButton';
-    } else {
-      atBeginning = false;
-      document.getElementById('prevButton').className = 'availableButton';
-    }
-    if (end === comments.length) {
-      atEnd = true;
-      document.getElementById('nextButton').className = 'unavailableButton';
-    } else {
-      atEnd = false;
-      document.getElementById('nextButton').className = 'availableButton';
-    }
-
-    for (let i = start; i < end; i++) {
->>>>>>> f45d289... Fix validator issues
       const comment = comments[i];
       const commentElement = createCommentElement(comment);
       commentArea.appendChild(commentElement);
@@ -213,14 +168,7 @@ async function submitComment() {
  * drop-down menu, and re-load comments.
  */
 function changeNumComments() {
-<<<<<<< HEAD
   // Get the newly selected number from the drop-down
-=======
-  // Start the page back at 0
-  pageNum = 0;
-
-  // Get the newly selected number from the dropdown
->>>>>>> f45d289... Fix validator issues
   const num = document.getElementById('numComments');
   if (num !== null) {
     numComments = num.options[num.selectedIndex].text;
@@ -358,18 +306,7 @@ function createCommentElement(comment) {
 
   // Timestamp
   const date = new Date(comment.timestamp);
-<<<<<<< HEAD
   const formatted = toAmPmTimestamp(date);
-=======
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const year = date.getFullYear();
-  const hour = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-  const minute = '0' + date.getMinutes();
-  const label = date.getHours() > 12 ? 'pm' : 'am';
-  const formatted = month + '/' + day + '/' + year + ', ' + hour + ':' +
-      minute.substr(-2) + label;
->>>>>>> f45d289... Fix validator issues
 
   // Span tag for the comment text
   const commentText = document.createElement('span');
@@ -402,52 +339,3 @@ function createCommentElement(comment) {
 
   return commentElement;
 }
-<<<<<<< HEAD
- 
-=======
-
-/**
- * Moves to next page if not currently at the end of
- * pages, and gets/displays comments for the new page.
- */
-function advancePage() {
-  if (!atEnd) {
-    pageNum = pageNum + 1;
-    getComments();
-  }
-}
-
-/**
- * Moves to the previous page if not currently at
- * the beginning of pages, and gets/displays
- * comments for the new page.
- */
-function previousPage() {
-  if (!atBeginning) {
-    pageNum = pageNum - 1;
-    getComments();
-  }
-}
-
-/**
- * Retrieve the number of comments to display from the
- * drop-down menu.
- * @return {number} the number of comments requested,
- * or -1 if it could not be found.
- */
-function getNumComments() {
-  // Get the selected number from the dropdown
-  const num = document.getElementById('numComments');
-  if (num !== null) {
-    let numComments = num.options[num.selectedIndex].text;
-
-    // Parse String to int to return
-    numComments = parseInt(numComments);
-    if (!isNaN(numComments)) {
-      return numComments;
-    }
-    return -1;
-  }
-  return -1;
-}
->>>>>>> f45d289... Fix validator issues

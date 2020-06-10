@@ -74,7 +74,7 @@ li a:hover {
   text-align: center;
 }
 
-.buttonSmall {
+.button-small {
   background-color: #4d0066;
   border-radius: 50%;
   color: white;
@@ -84,18 +84,18 @@ li a:hover {
   text-align: center;
 }
 
-.logoButton {
+.logo-button {
   display: inline-block;
   height: 40px;
   margin-right: 10px;
   width: 40px;
 }
 
-.logoButton:hover {
+.logo-button:hover {
   box-shadow: 1px 1px 1px grey;
 }
 
-.pagerButton {
+.pager-button {
   background-color: #e6ccff;
   border-radius: 10%;
   display: inline-block;
@@ -105,7 +105,7 @@ li a:hover {
   width: 80px;
 }
 
-.pagerButton:hover {
+.pager-button:hover {
   box-shadow: 1px 1px 1px grey;
 }
 
@@ -114,7 +114,7 @@ li a:hover {
   margin-bottom: 20px;
 }
 
-.commentForm {
+.comment-form {
   display: none;
 }
 
@@ -130,16 +130,16 @@ li a:hover {
   width: 650px;
 }
 
-.postArea {
+.post-area {
   margin-bottom: 10px;
   margin-top: 10px;
 }
 
-.blogPost {
+.blog-post {
   display: none;
 }
 
-.pageButtonContainer {
+.page-button-container {
   text-align: center;
 }
 
@@ -179,7 +179,7 @@ img.resize {
   padding: 2px;
 }
 
-img.resizeSmall {
+img.resize-small {
   height: 20px;
   width: 20px;
 }
@@ -194,7 +194,7 @@ img.resizeSmall {
   width: 650px;
 }
 
-.inputBox {
+.input-box {
   font-family: 'Questrial', sans-serif;
 }
 
@@ -223,13 +223,13 @@ img.resizeSmall {
 }
 
 /* Boxes and borders */
-.filledBox {
+.filled-box {
   background: #f2e6ff;
   border-radius: 25px;
   padding: 20px;
 }
 
-.borderBox {
+.border-box {
   background-color: white;
   border: 4px solid #f2e6ff;
   border-radius: 25px;

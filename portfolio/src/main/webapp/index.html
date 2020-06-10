@@ -15,7 +15,7 @@
     </ul>
     <div id="greeting-container"></div>
     <section id="welcome-content">
-      <div class="filledBox">
+      <div class="filled-box">
         <h1>HI, I'M KATIE</h1>
         <p>Click here to get a random fact about me:</p>
         <button type="button" onclick="addRandomFact()" class="button">Fact</button>
@@ -54,15 +54,15 @@
         </dl>
         <div class="title">My Links</div>
         <a href="https://www.linkedin.com/in/katie-lund1/">
-          <img src="/images/linkedin.png" alt="LinkedIn Logo" class="logoButton" />
+          <img src="/images/linkedin.png" alt="LinkedIn Logo" class="logo-button" />
         </a>
         <a href="https://www.github.com/kathleen-lund">
-          <img src="/images/github.png" alt="GitHub Logo" class="logoButton" />
+          <img src="/images/github.png" alt="GitHub Logo" class="logo-button" />
         </a>
       </div>
     </section>
     <section id="comment-content">
-      <div class="borderBox">
+      <div class="border-box">
         <h2>TELL ME WHAT YOU THINK</h2>
         <label for="numComments">Display:</label>
         <select name="numComments" id="numComments" onchange="changeNumComments()">
@@ -77,17 +77,17 @@
           <option value="oldest">Oldest First</option>
         </select>
         <p id="accountMessage"></p>
-        <form onsubmit="submitComment()" id="commentForm" class="commentForm">
+        <form onsubmit="submitComment()" id="commentForm" class="comment-form">
           <span id="greetUser"></span>
           <p>Submit a comment:</p>
           <span>Comment:</span>
-          <input type="text" name="user-comment" id="userComment" class="inputBox" />
+          <input type="text" name="user-comment" id="userComment" class="input-box" />
           <button type="submit" class="button">Submit</button>
         </form>
         <article id="comment-space"></article>
-        <div class="pageButtonContainer">
-          <button type="submit" id="prevButton" class="pagerButton" onclick="previousPage()">Prev</button>
-          <button type="submit" id="nextButton" class="pagerButton" onclick="advancePage()">Next</button>
+        <div class="page-button-container">
+          <button type="submit" id="prevButton" class="pager-button" onclick="previousPage()">Prev</button>
+          <button type="submit" id="nextButton" class="pager-button" onclick="advancePage()">Next</button>
         </div>
       </div>
     </section>

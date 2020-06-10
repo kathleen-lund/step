@@ -18,12 +18,9 @@ import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-// import com.google.cloud.datastore.EntityQuery;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
-// import com.google.cloud.datastore.Query;
-// import com.google.cloud.datastore.QueryResults;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.QueryResultList;
 import com.google.gson.Gson;
@@ -76,7 +73,6 @@ public class GetCommentsServlet extends HttpServlet {
     // Loop through Entities and add them to comments List
     List<Comment> comments = new ArrayList<>();
     for (Entity entity : entities) {
-      // Entity entity = entities.next();
       long id = entity.getKey().getId();
       String text = (String) entity.getProperty("text");
       long timestamp = (long) entity.getProperty("timestamp");
@@ -87,8 +83,6 @@ public class GetCommentsServlet extends HttpServlet {
       Comment comment = new Comment(id, text, timestamp, username, email);
       comments.add(comment);
     }
-
-    // Get nextPageCursor for return
     String nextPageCursor = entities.getCursor().toWebSafeString();
 
     // Format comments List to JSON for return
