@@ -12,6 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/* Global variables to support comment pagination */
+let pageNum = 0;
+let numComments = 5;
+let pageCursor = null;
+let cursorList = [null];
+let order = 'newest';
+
 /**
  * Adds a random fact to the page.
  */
@@ -85,25 +92,44 @@ function hideBlogPost(postNum) {
 }
 
 /**
- * Gets the requested number of comments using the GetCommentsServlet
- * and adds them to the site interface.
+ * Gets the comments using the GetCommentsServlet
+ * and adds them to the site interface. Supports
+ * pagination between to see all comments.
  */
 async function getComments() {
-  let numComments = getNumComments();
-  if (numComments === -1) {
-    // If number was unable to be parsed, default to 5
-    numComments = 5;
+  // Reset pageCursor to the one for this page before fetching
+  if (pageNum >= 0 && pageNum < cursorList.length) {
+    pageCursor = cursorList[pageNum];
   }
 
-  // Fetch correct number of comments from servlet
-  const responsePath = '/get-comments?num=' + String(numComments);
+  // Fetch comments from servlet
+  const responsePath = '/get-comments?order=' + order +
+      '&pageCursor=' + pageCursor + '&num=' + numComments;
   const response = await fetch(responsePath);
-  const comments = await response.json();
+  const resp = await response.json();
 
   const commentArea = document.getElementById('comment-space');
-  if (commentArea !== null && comments !== null) {
+  if (commentArea !== null && resp.comments !== null) {
+    if (pageNum >= (cursorList.length - 1)) {
+      // Just went to a page not seen before: add its
+      // cursor to the end of the array
+      cursorList.push(resp.nextPageCursor);
+    }
+    pageCursor = cursorList[pageNum];
+
+    // Retrieve and parse comments JSON from get-comments response
+    let comments = resp.comments;
+    comments = JSON.parse(comments);
+    if (comments.length === 0 || comments === '') {
+      // At the end: no more comments
+      pageNum = pageNum - 1;
+      return;
+    }
+
     // Clear comment area in case page is being reloaded
     commentArea.innerHTML = '';
+
+    // Append current comments to page
     for (let i = 0; i < comments.length; i++) {
       const comment = comments[i];
       const commentElement = createCommentElement(comment);
@@ -114,24 +140,80 @@ async function getComments() {
 
 /**
  * Retrieve the number of comments to display from the
- * drop-down menu.
- * @return {number} the number of comments requested,
- * or -1 if it could not be found.
+ * drop-down menu, and re-load comments.
  */
-function getNumComments() {
-  // Get the selected number from the dropdown
+function changeNumComments() {
+  // Get the newly selected number from the drop-down
   const num = document.getElementById('numComments');
   if (num !== null) {
-    let numComments = num.options[num.selectedIndex].text;
-
-    // Parse String to int to return
+    numComments = num.options[num.selectedIndex].text;
+    // Parse String to int
     numComments = parseInt(numComments);
-    if (!isNaN(numComments)) {
-      return numComments;
+    if (isNaN(numComments)) {
+      // Default to 5 comments
+      numComments = 5;
     }
-    return -1;
+  } else {
+    // Default to show 5 comments
+    numComments = 5;
   }
-  return -1;
+
+  // Reset page back to beginning
+  cursorList = [null];
+  pageNum = 0;
+  pageCursor = null;
+  getComments();
+}
+
+/**
+ * Retrieve the order of comments to display from the
+ * drop-down menu, and re-load comments.
+ */
+function changeCommentOrder() {
+  // Get the newly selected order from the drop-down
+  order = getCommentOrder();
+  if (order == null) {
+    // If could not find comment order, default to newest first
+    order = 'newest';
+  }
+
+  // Reset page back to beginning
+  cursorList = [null];
+  pageNum = 0;
+  pageCursor = null;
+  getComments();
+}
+
+/**
+ * Retrieve the comment order to display from the
+ * drop-down menu.
+ * @return {String} the order requested for comment
+ * viewing, or null if it was not found.
+ */
+function getCommentOrder() {
+  // Get the selected number from the dropdown
+  const order = document.getElementById('commentOrder');
+  if (order !== null) {
+    return order.options[order.selectedIndex].value;
+  }
+  return null;
+}
+
+/**
+ * Submit a comment using form fields using the
+ * DataServlet, and reload comments.
+ */
+async function submitComment() {
+  const text = document.getElementById('userComment').value;
+  const name = document.getElementById('userName').value;
+  const responsePath = '/data?text=' + text + '&name=' + name;
+  fetch(responsePath);
+
+  // Reset page back to beginning
+  cursorList = [null];
+  pageNum = 0;
+  pageCursor = null;
+  getComments();
 }
 
 /**
@@ -142,6 +224,46 @@ async function deleteComment(comment) {
   const params = new URLSearchParams();
   params.append('id', comment.id);
   fetch('/delete-comment', {method: 'POST', body: params});
+
+  // Reset page back to beginning
+  cursorList = [null];
+  pageNum = 0;
+  pageCursor = null;
+  getComments();
+}
+
+/**
+ * Convert a Javascript Date to the AM/PM
+ * format desired.
+ * @return {String} the Date formatted in
+ * MM/DD/YYYY, Hr:Min am/pm
+ */
+function toAmPmTimestamp(date) {
+  const hour = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+  const minute = '0' + date.getMinutes();
+  const label = date.getHours() > 12 ? 'pm' : 'am';
+  let formatted = date.toLocaleDateString();
+  formatted = formatted + ', ' + hour + ':' + minute.substr(-2) + label;
+  return formatted;
+}
+
+/**
+ * Moves to next page and gets/displays
+ * comments for the new page.
+ */
+function advancePage() {
+  pageNum = pageNum + 1;
+  getComments();
+}
+
+/**
+ * Moves to the previous page if not currently at
+ * the beginning of pages, and gets/displays
+ * comments for the new page.
+ */
+function previousPage() {
+  pageNum = pageNum - 1 >= 0 ? pageNum - 1 : 0;
+  getComments();
 }
 
 /**
@@ -157,9 +279,17 @@ function createCommentElement(comment) {
   const usernameStr = comment.username + ':';
   username.innerText = usernameStr;
 
+  // Timestamp
+  const date = new Date(comment.timestamp);
+  const formatted = toAmPmTimestamp(date);
+
   // Span tag for the comment text
-  const text = document.createElement('span');
-  text.innerText = comment.text;
+  const commentText = document.createElement('span');
+  // Make sure to escape comment input for HTML tags
+  const escapeDiv = document.createElement('div');
+  escapeDiv.innerText = comment.text;
+  const html = ' ' + escapeDiv.innerHTML + '\n <i>' + formatted + '</i>';
+  commentText.innerHTML = html;
 
   // Delete button for each comment
   const deleteButton = document.createElement('button');
@@ -173,9 +303,10 @@ function createCommentElement(comment) {
     commentElement.remove();
   });
 
+
   // Append username, text, and delete button to overall element
   commentElement.appendChild(username);
-  commentElement.appendChild(text);
+  commentElement.appendChild(commentText);
   commentElement.appendChild(deleteButton);
   return commentElement;
 }

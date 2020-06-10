@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Katie's Portfolio</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <ul>
+      <li><a href="index.html">HOME</a></li>
+      <li><a href="gallery.html">GALLERY</a></li>
+      <li><a href="blog.html">BLOG</a></li>
+    </ul>
+    <section id="blog-content">
+      <div class="borderBox">
+        <h2>BLOG POSTS</h2>
+        <article id="blogPostArea1" class="postArea">
+          <b>Hidden Talent 1: Bucket Ball</b>
+          <img
+            src="/images/righttriangle.jpeg"
+            class="resizeSmall"
+            id="expandTriangle1"
+            alt="Expand/Hide"
+            onclick="showBlogPost(1)"
+          />
+          <div id="blogPost1" class="blogPost">
+            <p>
+              I have a secret love for bucket balls. Not only am I randomly good at tossing balls in incrementally
+              spaced buckets, but I've had lots of opportunity to do so. Some of my fondest memories are tossing
+              softballs back into the ball bucket from many yards away at the end of practice, to the delight of my
+              teammates.
+            </p>
+            <img src="/images/bucketballs.png" alt="Bucket Balls" />
+          </div>
+        </article>
+        <article id="blogPostArea2" class="postArea">
+          <b>Hidden Talent 2: Double Jointedness</b>
+          <img
+            src="/images/righttriangle.jpeg"
+            class="resizeSmall"
+            id="expandTriangle2"
+            alt="Expand/Hide"
+            onclick="showBlogPost(2)"
+          />
+          <div id="blogPost2" class="blogPost">
+            <p>
+              My fingers are very double-jointed. I can bend them all downward at the first joint behind the nail, and
+              my thumbs bend backwards in a hitchhiker's thumb position. This double-jointedness actually makes it a bit
+              difficult to play the cello, as collapsing joints are a big no-no for your left hand.
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </body>
+</html>
