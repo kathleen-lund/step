@@ -314,8 +314,6 @@ function createCommentElement(comment) {
   commentElement.appendChild(commentText);
 
   // Delete button for the comment if it's your own
-  console.log(email);
-  console.log(comment.email);
   if (email === comment.email) {
     const deleteButton = document.createElement('button');
     deleteButton.innerText = 'Delete';
@@ -331,4 +329,21 @@ function createCommentElement(comment) {
   }
 
   return commentElement;
+}
+
+async function sendUsername() {
+  const username = document.getElementById('username').value;
+  const responsePath = '/username?username=' + username;
+  await fetch(responsePath, {method: 'POST'}).then(function(response) {
+      if (response.status === 200) {
+        window.open('/index.html', '_self', false);
+      }
+      else if (response.status === 409) {
+          document.getElementById('errorMessage').innerText = "That username is taken, please try another.";
+      }
+      else {
+          // dis user tried to set a username without logging in >:(
+         window.open('/index.html', '_self', false); 
+      }
+  });
 }
