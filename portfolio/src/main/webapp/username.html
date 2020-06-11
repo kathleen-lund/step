@@ -11,11 +11,13 @@
     <section id="welcome-content">
       <div class="border-box">
         <h2>SET USERNAME</h2>
-        <form method="post" action="/username">
+        <!-- <form method="post" action="/username"> -->
+        <form onsubmit="sendUsername(); return false;" method="post">
           <span>Username:</span>
           <input type="text" id="username" name="username" />
           <button type="submit" class="button">Submit</button>
         </form>
+        <span id="errorMessage"></span>
       </div>
     </section>
   </body>
