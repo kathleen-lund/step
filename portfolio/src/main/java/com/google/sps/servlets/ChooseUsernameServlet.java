@@ -53,7 +53,6 @@ public class ChooseUsernameServlet extends HttpServlet {
     TransactionOptions options = TransactionOptions.Builder.withXG(true);
     Transaction transaction = datastore.beginTransaction(options);
     try {
-      Entity usr = new Entity("Username", username);
       Entity check = null;
       try {
         Key usrkey = KeyFactory.createKey("Username", username);
@@ -67,6 +66,7 @@ public class ChooseUsernameServlet extends HttpServlet {
         response.setStatus(409, "Username already exists.");
         return;
       } else {
+        Entity usr = new Entity("Username", username);
         datastore.put(transaction, usr);
         // Make a UserInfo Entity with retrieved ID and username
         Entity entity = new Entity("UserInfo", id);
