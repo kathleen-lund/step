@@ -37,29 +37,20 @@ public class LoginStatusServlet extends HttpServlet {
     // If user is not logged in, return a message with a link to login
     if (!userService.isUserLoggedIn()) {
       String loginUrl = userService.createLoginURL("/index.html");
-      String message = "<p>Login <a href=\"" + loginUrl + "\">here</a> to post a comment.</p>";
       JsonObject json = new JsonObject();
-      json.addProperty("message", message);
+      json.addProperty("url", loginUrl);
       out.println(json.toString());
       return;
     }
 
-    // User should have set a username at this point
-    String username = getUserUsername(userService.getCurrentUser().getUserId());
-    if (username == null) {
-      System.out.println("User did not set a username");
-    }
-
     // Build logout message to display to logged-in user
-    String logoutUrl = userService.createLogoutURL("/index.html");
-    String message = "<p>Logout <a href=\"" + logoutUrl + "\">here</a>.</p>";
-    message += "<p>Change your username <a href=\"/username.html\">here</a>.</p>";
-
+    String username = getUserUsername(userService.getCurrentUser().getUserId());
     String userEmail = userService.getCurrentUser().getEmail();
+    String logoutUrl = userService.createLogoutURL("/index.html");
     JsonObject json = new JsonObject();
     json.addProperty("username", username);
     json.addProperty("email", userEmail);
-    json.addProperty("message", message);
+    json.addProperty("url", logoutUrl);
 
     out.println(json.toString());
   }
