@@ -17,6 +17,8 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,7 +40,16 @@ public class DataServlet extends HttpServlet {
     String username = request.getParameter("username");
     if (comment == null || comment.equals("") || email == null || email.equals("")
         || username == null || username.equals("")) {
-      // One of the necessary parameters was not set: redirect
+      // One of the necessary parameters was not set: return error and redirect
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST, "Invalid request: parameter not set.");
+      response.sendRedirect("/index.html");
+      return;
+    }
+    UserService userService = UserServiceFactory.getUserService();
+    if (!userService.isUserLoggedIn()) {
+      // User is not logged in and tried to post a comment using the URL
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED,
+          "You cannot post a comment if you are not logged in.");
       response.sendRedirect("/index.html");
       return;
     }

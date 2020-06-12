@@ -101,9 +101,11 @@ function hideBlogPost(postNum) {
 async function getComments() {
   const login = await fetch('/login-status');
   const loginInfo = await login.json();
-  document.getElementById('accountMessage').innerHTML = loginInfo.message;
-  if (loginInfo.message.includes('Logout')) {
+  let message = '';
+  if (loginInfo.url.includes('logout')) {
     // User is logged in
+    message += '<p>Logout <a href="' + loginInfo.url + '">here</a>.</p>';
+    message += '<p>Change your username <a href="/username.html">here</a>.</p>';
     document.getElementById('commentForm').style.display = 'block';
     email = loginInfo.email;
     username = loginInfo.username;
@@ -113,7 +115,11 @@ async function getComments() {
       document.getElementById('greetUser').innerText =
           'Hello, ' + username + '!';
     }
+  } else {
+    message += '<p>Login <a href="' + loginInfo.url +
+        '">here</a> to post a comment.</p>';
   }
+  document.getElementById('accountMessage').innerHTML = message;
 
   // Reset pageCursor to the one for this page before fetching
   if (pageNum >= 0 && pageNum < cursorList.length) {
@@ -331,19 +337,25 @@ function createCommentElement(comment) {
   return commentElement;
 }
 
+/**
+ * Send a requested username to the
+ * ChooseUsernameServlet. Check response
+ * codes for errors.
+ */
 async function sendUsername() {
   const username = document.getElementById('username').value;
   const responsePath = '/username?username=' + username;
   await fetch(responsePath, {method: 'POST'}).then(function(response) {
-      if (response.status === 200) {
-        window.open('/index.html', '_self', false);
-      }
-      else if (response.status === 409) {
-          document.getElementById('errorMessage').innerText = "That username is taken, please try another.";
-      }
-      else {
-          // dis user tried to set a username without logging in >:(
-         window.open('/index.html', '_self', false); 
-      }
+    if (response.status === 200) {
+      window.open('/index.html', '_self', false);
+    } else if (response.status === 409) {
+      // Conflict error: username already taken
+      document.getElementById('errorMessage').innerText =
+          'That username is taken, please try another.';
+    } else {
+      // User tried to set a username using a link without being logged in
+      // Send them back to home screen
+      window.open('/index.html', '_self', false);
+    }
   });
 }
