@@ -65,8 +65,6 @@ public class ChooseUsernameServlet extends HttpServlet {
       if (check != null) {
         // An entity was found with the requested username
         response.setStatus(409, "Username already exists.");
-        response.getWriter().close();
-        transaction.commit();
         return;
       } else {
         datastore.put(transaction, usr);
@@ -80,7 +78,7 @@ public class ChooseUsernameServlet extends HttpServlet {
       }
     } finally {
       if (transaction.isActive()) {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unable to complete transaction");
+        transaction.rollback();
       }
     }
     response.sendRedirect("/index.html");
