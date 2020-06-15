@@ -360,49 +360,62 @@ async function sendUsername() {
   });
 }
 
-/** 
+/**
  * Creates a map showing markers/landmarks and adds it
  * to the DOM.
  */
 function createMap() {
+  const google = window.google;
   const map = new google.maps.Map(
-      document.getElementById('map'), 
+      document.getElementById('map'),
       {center: {lat: 40.405284, lng: -98.597794}, zoom: 4});
- 
+
   addLandmark(
       map, 42.284585, -87.966808, 'Libertyville High School',
-      'Libertyville High School: This is where I attended highschool. Go Wildcats!')
+      'Libertyville High School: This is where I attended highschool. ' +
+        'Go Wildcats!');
   addLandmark(
       map, 38.647460, -90.310449, 'Danforth University Center',
-      'Danforth University Center: The main university center at Washington University in St. Louis. The taco salads here are the best!')
+      'Danforth University Center: The main university center at ' +
+        'Washington University in St. Louis. The taco salads here ' +
+        'are the best!');
   addLandmark(
       map, 38.640309, -90.293711, 'Art Hill',
-      'Art Hill: Art Hill is in Forest Park, a large, beautiful park right next to my university. Students have been known to picnic here or sled down the hill with stolen cafeteria trays!');
+      'Art Hill: Art Hill is in Forest Park, a large, beautiful ' +
+        'park right next to my university. Students have been known ' +
+        'to picnic here or sled down the hill with stolen cafeteria trays!');
   addLandmark(
       map, 38.608810, -90.205447, 'Chava\'s',
-      'Chava\'s: My favorite Mexican restaurant in St. Louis is located in Soulard, which is also home of the world\'s 2nd-largest Mardi Gras celebration!')
+      'Chava\'s: My favorite Mexican restaurant in St. Louis is located ' +
+        'in Soulard, which is also home of the world\'s 2nd-largest Mardi ' +
+        'Gras celebration!');
   addLandmark(
       map, 38.647346, -90.339038, 'Invisibly, Inc.',
-      'Invisibly, Inc.: This was where I had my Software Engineering Internship last summer! I learned about the ad ecosystem while working on an Android app.')
+      'Invisibly, Inc.: This was where I had my Software Engineering ' +
+        'Internship last summer! I learned about the ad ecosystem while ' +
+        'working on an Android app.');
   addLandmark(
       map, 34.031441, -118.469781, 'Lionsgate Headquarters',
-      'Lionsgate Headquarters: I attended a meeting here to pitch the app I worked on last summer!')
+      'Lionsgate Headquarters: I attended a meeting here to pitch the ' +
+        'app I worked on last summer!');
   addLandmark(
       map, 39.951910, -75.193437, 'UPenn',
-      'UPenn: The site of my first hackaton, PennApps. My group made the top 40 with our sustainability iOS app!')
+      'UPenn: The site of my first hackaton, PennApps. My group made ' +
+        'the top 40 with our sustainability iOS app!');
   addLandmark(
       map, 47.625373, -122.336449, 'Google Seattle',
-      'Google Seattle: The location of my hosts :)')   
+      'Google Seattle: The location of my hosts :)');
 }
- 
-/** 
- * Adds a marker that shows an info 
- * window when clicked. 
+
+/**
+ * Adds a marker that shows an info
+ * window when clicked.
  */
 function addLandmark(map, lat, lng, title, description) {
+  const google = window.google;
   const marker = new google.maps.Marker(
       {position: {lat: lat, lng: lng}, map: map, title: title});
- 
+
   const infoWindow = new google.maps.InfoWindow({content: description});
   marker.addListener('click', () => {
     infoWindow.open(map, marker);
