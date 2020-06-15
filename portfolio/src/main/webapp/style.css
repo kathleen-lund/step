@@ -222,6 +222,16 @@ img.resize-small {
   box-shadow: 1px 1px 1px grey;
 }
 
+/* Map styling */
+
+.map {
+  border: solid purple;
+  border-radius: 25px;
+  height: 600px;
+  /* padding: 20px; */
+  width: 600px;
+}
+
 /* Boxes and borders */
 .filled-box {
   background: #f2e6ff;
