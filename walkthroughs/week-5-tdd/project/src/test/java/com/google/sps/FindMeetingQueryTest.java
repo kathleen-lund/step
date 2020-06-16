@@ -392,7 +392,7 @@ public final class FindMeetingQueryTest {
     Collection<TimeRange> expected =
         Arrays.asList(TimeRange.fromStartDuration(TIME_0830AM, DURATION_30_MINUTES), 
             TimeRange.fromStartEnd(TIME_1000AM, TIME_1200PM, false), 
-            TimeRange.fromStartDuration(TIME_0130PM, TimeRange.END_OF_DAY));
+            TimeRange.fromStartEnd(TIME_0130PM, TimeRange.END_OF_DAY, true));
 
     Assert.assertEquals(expected, actual);
   }
