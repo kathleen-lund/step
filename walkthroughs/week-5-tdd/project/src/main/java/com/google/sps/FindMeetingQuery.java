@@ -19,82 +19,105 @@ import java.util.Collections;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.Comparator;
 
 public final class FindMeetingQuery {
-  public static final int START_OF_DAY = 0;
-  public static final int END_OF_DAY = 1440;
+  public static final int START_OF_DAY_MINUTES = 0;
+  public static final int END_OF_DAY_MINUTES = 24 * 60; // for a 24 hour day
 
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    // Sort Collection by start time by using a stream
+    // Sort Collection by start time
     events.stream().sorted((e1, e2) -> e1.getWhen().start() - e2.getWhen().start());
 
     Collection<String> optionalAttendees = request.getOptionalAttendees();
     Collection<String> mandatoryAttendees = request.getAttendees();
 
     // No meeting attendees: whole day is open
-    if (optionalAttendees.isEmpty() && mandatoryAttendees.isEmpty()) {
-      return Arrays.asList(TimeRange.fromStartEnd(START_OF_DAY, END_OF_DAY, false));
+    if (optionalAttendees.isEmpty() && mandatoryAttendees.isEmpty() && request.getDuration() <= END_OF_DAY_MINUTES) {
+      return Arrays.asList(TimeRange.fromStartEnd(START_OF_DAY_MINUTES, END_OF_DAY_MINUTES, false));
     }
 
-    // First track times unavailable for the group
-    List<TimeRange> unavailableTimes = new ArrayList<>();
-    List<TimeRange> optionalUnavailableTimes = new ArrayList<>();
+    // First track times events for all attendees and only mandatory attendees
+    List<TimeRange> allEvents = new ArrayList<>();
+    List<TimeRange> allRequiredEvents = new ArrayList<>();
     for (Event e : events) {
       // If the attendee lists are not disjoint (meaning there is at least one attendee in common), 
-      // save this event time as unavailable
+      // save this event time
       if (!Collections.disjoint(e.getAttendees(), mandatoryAttendees)) {
-        unavailableTimes.add(e.getWhen());
+        // Required for everyone
+        allRequiredEvents.add(e.getWhen());
+        allEvents.add(e.getWhen());
       } 
-      if (!Collections.disjoint(e.getAttendees(), optionalAttendees)) {
-        optionalUnavailableTimes.add(e.getWhen());
-      } 
+      else if (!Collections.disjoint(e.getAttendees(), optionalAttendees)) {
+        // Only optional
+        allEvents.add(e.getWhen());
+      }
     }
 
     // Coalesce any overlapping times in the lists
-    coalesceList(unavailableTimes);
-    coalesceList(optionalUnavailableTimes);
+    coalesceList(allRequiredEvents);
+    coalesceList(allEvents);
 
-    List<TimeRange> availableTimes = new ArrayList<>();
-    List<TimeRange> optionalAvailableTimes = new ArrayList<>();
     long duration = request.getDuration();
 
-    if (!unavailableTimes.isEmpty()) {
-      // Check if any times are open for mandatory attendees
-      // Methods add open times to availableTimes list
-      checkMorning(unavailableTimes, availableTimes, duration);
-      checkBetweenMeetings(unavailableTimes, availableTimes, duration);
-      checkEvening(unavailableTimes, availableTimes, duration);
-    }
-    else if (!mandatoryAttendees.isEmpty() && duration <= END_OF_DAY) {
-      // Entire day is open
-      availableTimes.add(TimeRange.fromStartEnd(START_OF_DAY, END_OF_DAY, false));
+    List<TimeRange> allAvailableTimes = filterTimeWindowLength(invert(allEvents), duration);
+    List<TimeRange> allRequiredAvailableTimes = filterTimeWindowLength(invert(allRequiredEvents), duration);
+    if (mandatoryAttendees.isEmpty()) {
+      // No mandatory attendees, so only look at all available times
+      allRequiredAvailableTimes = Arrays.asList();
     }
 
-    if (!optionalUnavailableTimes.isEmpty()) {
-      // Check if any times are open for optional attendees
-      // Methods add open times to optionalAvailableTimes list
-      checkMorning(optionalUnavailableTimes, optionalAvailableTimes, duration);
-      checkBetweenMeetings(optionalUnavailableTimes, optionalAvailableTimes, duration);
-      checkEvening(optionalUnavailableTimes, optionalAvailableTimes, duration);
-    }
-    else if (!optionalAttendees.isEmpty() && duration <= END_OF_DAY) {
-      // Entire day is open
-      optionalAvailableTimes.add(TimeRange.fromStartEnd(START_OF_DAY, END_OF_DAY, false));
+    return allAvailableTimes.isEmpty() 
+        ? allRequiredAvailableTimes
+        : allAvailableTimes;  
+  }
+
+ /**
+  * invert: takes a list of event time ranges
+  * and returns an inverted list with all time
+  * ranges there is NOT a meeting.
+  */
+  private static List<TimeRange> invert(List<TimeRange> events) {
+    if (events.isEmpty()) {
+      return Arrays.asList(TimeRange.fromStartEnd(START_OF_DAY_MINUTES, END_OF_DAY_MINUTES, false)); 
     }
 
-    // Attempt to combine to two lists to see if there are times when mandatory
-    // and optional attendees are both available
-    List<TimeRange> totalAvailableTimes = combineAvailableLists(availableTimes, optionalAvailableTimes, duration);
+    List<TimeRange> invertedList = new ArrayList<>();
+    // Check if first event starts after beginning of day
+    if (events.get(0).start() > START_OF_DAY_MINUTES) {
+      invertedList.add(TimeRange.fromStartEnd(START_OF_DAY_MINUTES, events.get(0).start(), false));
+    }
+    
+    // Check gaps between events
+    for (int i = 0; i < events.size()-1; i++) {
+      int gap = events.get(i+1).start() - events.get(i).end();
+      if (gap > 0) {
+        invertedList.add(TimeRange.fromStartDuration(events.get(i).end(), gap));
+      }
+    }
 
-    if (availableTimes.isEmpty()) {
-      return optionalAvailableTimes;
+    // Check if last event ends before the end of day
+    if (events.get(events.size()-1).end() < END_OF_DAY_MINUTES) {
+      invertedList.add(TimeRange.fromStartEnd(events.get(events.size()-1).end(), END_OF_DAY_MINUTES, false));
     }
-    else if (totalAvailableTimes.isEmpty()) {
-      return availableTimes;
+
+    return invertedList;
+  }
+
+ /**
+  * filterTimeWindowLength: goes through a list
+  * of times and returns a new list with ones
+  * that are long enough for the duration.
+  */
+  private static List<TimeRange> filterTimeWindowLength(List<TimeRange> times, long duration) {
+    List<TimeRange> filteredList = new ArrayList<>();
+    for (TimeRange t : times) {
+      if (t.duration() >= duration) {
+        filteredList.add(t);
+      }
     }
-    else {
-      return totalAvailableTimes;
-    }    
+    return filteredList;
   }
 
  /**
@@ -102,94 +125,27 @@ public final class FindMeetingQuery {
   * overlapping times so that every entry in the list is a 
   * distinct and separate time.
   */
-  public static void coalesceList(List<TimeRange> times) {
+  private static void coalesceList(List<TimeRange> times) {
+    // Sort events by start to ensure no overlaps are missed
+    times.sort(Comparator.comparing(TimeRange::start));
+
     for (int i = 0; i < times.size()-1; i++) {
       // Check for overlaps and coalesce them into one TimeRange if overlapping
       TimeRange t1 = times.get(i);
       TimeRange t2 = times.get(i+1);
-      if (t1.overlaps(t2)) {
+      if (t1.overlaps(t2) || t1.start()==t2.end() || t1.end()==t2.start()) {
         int newEnd = t1.end() >= t2.end() ? t1.end() : t2.end();
         int newStart = t1.start() <= t2.start() ? t1.start() : t2.start();
         int newDuration = newEnd - newStart;
         TimeRange newTime = TimeRange.fromStartEnd(newStart, newEnd, false);
         times.remove(i+1);
         times.set(i, newTime);
-        i--;
+        // Sort again and start back at beginning in case there are new overlaps
+        // Necessary in the case of more than one event throughout the day on top 
+        // of an all-day event
+        times.sort(Comparator.comparing(TimeRange::start));
+        i = -1;
       }
     }
-  }
-
- /**
-  * checkMorning: checks if the beginning of the day to
-  * the first unavailable time is long enough for the
-  * meeting duration. If long enough, adds to availableTimes list.
-  */
-  public static void checkMorning(List<TimeRange> unavailableTimes, List<TimeRange> availableTimes, long duration) {
-    // Check if the beginning of the day is open
-    int firstRange = unavailableTimes.get(0).start();
-    if (firstRange >= duration) {
-      availableTimes.add(TimeRange.fromStartEnd(START_OF_DAY, firstRange, false)); 
-    }
-  }
-
- /**
-  * checkBetweenMeetings: checks if any TimeRanges between meetings
-  * are long enough for the meeting duration. If long enough, adds 
-  * to availableTimes list.
-  */
-  public static void checkBetweenMeetings(List<TimeRange> unavailableTimes, List<TimeRange> availableTimes, long duration) {
-    for (int i = 0; i < unavailableTimes.size() - 1; i++) {
-      // Check if time between the two unavailable times is enough for duration of meeting
-      int timeBetween = unavailableTimes.get(i+1).start() - unavailableTimes.get(i).end();
-      if (timeBetween >= duration) {
-        // Found an open slot: add to available times
-        int newStart = unavailableTimes.get(i).end();
-        availableTimes.add(TimeRange.fromStartEnd(newStart, newStart+timeBetween, false));
-      }
-    }
-  }
-
- /**
-  * checkEvening: checks if the end of the last meeting to
-  * the end of the day is long enough for the meeting duration. 
-  * If long enough, adds to availableTimes list.
-  */
-  public static void checkEvening(List<TimeRange> unavailableTimes, List<TimeRange> availableTimes, long duration) {
-    // Check if last unavailable time to the end of day is long enough
-    int lastRange = END_OF_DAY - unavailableTimes.get(unavailableTimes.size() - 1).end();
-    if (lastRange >= duration) {
-      int newStart = unavailableTimes.get(unavailableTimes.size() - 1).end();
-      availableTimes.add(TimeRange.fromStartEnd(newStart, newStart+lastRange, false));
-    }
-  }
-
- /**
-  * combineAvailableLists: goes through two lists of available times and
-  * attempts to combine them into commonly available time blocks. Ensures
-  * that the blocks are greater than or equal to the meeting duration.
-  * @return {List<TimeRange>} totalAvailableTimes, the list of any times
-  * for this meeting common to both lists. Will be empty if none are available. 
-  * Assumes that both availableTimes1 and availableTimes2 are sorted with their
-  * times from the beginning of the day to the end.
-  */
-  public static List<TimeRange> combineAvailableLists(List<TimeRange> availableTimes1, List<TimeRange> availableTimes2, long duration) {
-    List<TimeRange> totalAvailableTimes = new ArrayList<>();
-    for (TimeRange t1 : availableTimes1) {
-      for (TimeRange t2 : availableTimes2) {
-        if (t1.overlaps(t2)) {
-          int newStart = t1.start() >= t2.start() ? t1.start() : t2.start();
-          int newEnd = t1.end() <= t2.end() ? t1.end() : t2.end();
-          if (newEnd - newStart >= duration) {
-            totalAvailableTimes.add(TimeRange.fromStartEnd(newStart, newEnd, false));
-          }
-        }
-        else if (t1.end() < t2.start()) {
-          // availableTimes2 will now all be later times than availableTimes1
-          // Break and move on
-          break;
-        }
-      }
-    }
-    return totalAvailableTimes;
   }
 }
